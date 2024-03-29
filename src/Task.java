@@ -1,8 +1,8 @@
 public class Task {
-    private String taskName;
-    private String description;
-    private int taskId;
-    private TaskStatus taskStatus;
+    protected String taskName;
+    protected String description;
+    protected int taskId;
+    protected TaskStatus taskStatus;
 
     Task() {
 
@@ -25,18 +25,26 @@ public class Task {
 
     @Override
     public int hashCode() {
-        int code = 17;
+        int hash = 17;
 
         if (taskName != null) {
-            code += taskName.hashCode();
+            hash = taskName.hashCode();
         }
 
-        code *= 37;
+        hash *= 7;
 
         if (description != null) {
-            code += description.hashCode();
+            hash += description.hashCode();
         }
 
-        return code;
+        return Math.abs(hash);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || obj.getClass() != this.getClass()) return false;
+        Task someTask = (Task) obj;
+        return taskId == someTask.taskId;
     }
 }

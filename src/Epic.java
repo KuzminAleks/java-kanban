@@ -1,23 +1,18 @@
+import java.util.ArrayList;
+
 public class Epic extends Task {
-    private String epicName;
-    private int idEpic;
-    private SubTask subTask;
+    private ArrayList<SubTask> subTasks;
 
-    Epic(String newEpicName) {
-        epicName = newEpicName;
-
+    Epic(String newEpicName, String newDescription) {
+        super(newEpicName, newDescription, TaskStatus.NEW);
+        subTasks = new ArrayList<>();
     }
 
-    @Override
-    public int hashCode() {
-        int code = 7;
+    public void addSubTaskToEpic(SubTask newSubTask) {
+        subTasks.add(newSubTask);
+    }
 
-        if (epicName != null) {
-            code += epicName.hashCode();
-        }
-
-        code *= 37;
-
-        return code;
+    public ArrayList<SubTask> getSubTasks() {
+        return subTasks;
     }
 }
