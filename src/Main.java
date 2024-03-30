@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Main {
@@ -8,12 +9,32 @@ public class Main {
 
         TaskManager taskManager = new TaskManager();
         taskManager.addTask(new Task("Task", "Some description", TaskStatus.NEW));
+
         taskManager.addEpicTask(new Epic("1 Epic", "Some description"));
         taskManager.addEpicTask(new Epic("2 Epic", "Some description"));
-        taskManager.addSubTask(new Epic("1 Epic", "Some description"), new SubTask("1 SubTask of 1 Epic", "Some Description", TaskStatus.NEW));
-        taskManager.addSubTask(new Epic("1 Epic", "Some description"), new SubTask("2 SubTask of 1 Epic", "Some Description", TaskStatus.NEW));
-        taskManager.addSubTask(new Epic("1 Epic", "Some description"), new SubTask("3 SubTask of 1 Epic", "Some Description", TaskStatus.NEW));
-        taskManager.addSubTask(new Epic("2 Epic", "Some description"), new SubTask("1 SubTask of 2 Epic", "Some Description", TaskStatus.NEW));
+
+        taskManager.addSubTask(new Epic("1 Epic", "Some description"),
+                                new SubTask("1 SubTask of 1 Epic", "Some Description", TaskStatus.NEW));
+
+        taskManager.addSubTask(new Epic("1 Epic", "Some description"),
+                                new SubTask("2 SubTask of 1 Epic", "Some Description", TaskStatus.NEW));
+
+        taskManager.addSubTask(new Epic("1 Epic", "Some description"),
+                                new SubTask("2 SubTask of 1 Epic", "Some Description", TaskStatus.IN_PROGRESS));
+
+        taskManager.addSubTask(new Epic("1 Epic", "Some description"),
+                                new SubTask("3 SubTask of 1 Epic", "Some Description", TaskStatus.NEW));
+
+        taskManager.addSubTask(new Epic("2 Epic", "Some description"),
+                                new SubTask("1 SubTask of 2 Epic", "Some Description", TaskStatus.NEW));
+
+        taskManager.addSubTask(new Epic("1 Epic", "Some description"),
+                new SubTask("1 SubTask of 1 Epic", "Some Description", TaskStatus.DONE));
+
+        ArrayList<SubTask> tempArr = taskManager.getSubTaskOfEpic(new Epic("1 Epic", "Some description"));
+        for (int i = 0; i < tempArr.size(); i++) {
+            System.out.println(tempArr.get(i).taskStatus);
+        }
 //        taskManager.deleteSubTaskById(6);
 //        taskManager.deleteEpicById(1);
         //taskManager.updateTask(new Task("Updated Task", "Some description", TaskStatus.NEW), 0);

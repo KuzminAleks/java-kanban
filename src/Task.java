@@ -1,3 +1,5 @@
+import java.util.Objects;
+
 public class Task {
     protected String taskName;
     protected String description;
@@ -45,6 +47,7 @@ public class Task {
         if (this == obj) return true;
         if (obj == null || obj.getClass() != this.getClass()) return false;
         Task someTask = (Task) obj;
-        return taskId == someTask.taskId;
+        return taskId == someTask.taskId && Objects.equals(taskName, someTask.taskName)
+                && Objects.equals(description, someTask.description);
     }
 }

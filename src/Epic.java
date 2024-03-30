@@ -15,4 +15,8 @@ public class Epic extends Task {
     public ArrayList<SubTask> getSubTasks() {
         return subTasks;
     }
+
+    public void changeSubTask(int index, SubTask newSubTask) {
+        subTasks.set(index, newSubTask);
+    }
 }
