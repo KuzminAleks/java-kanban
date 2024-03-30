@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
 public class Epic extends Task {
-    private ArrayList<SubTask> subTasks;
+    private final ArrayList<SubTask> subTasks;
 
     Epic(String newEpicName, String newDescription) {
         super(newEpicName, newDescription, TaskStatus.NEW);
@@ -14,9 +14,5 @@ public class Epic extends Task {
 
     public ArrayList<SubTask> getSubTasks() {
         return subTasks;
-    }
-
-    public void changeSubTask(int index, SubTask newSubTask) {
-        subTasks.set(index, newSubTask);
     }
 }
