@@ -28,16 +28,16 @@ public class Main {
         taskManager.updateSubTask(new SubTask("2 SubTask of 1 Epic", "Some Description", TaskStatus.IN_PROGRESS), 4);
 
         ArrayList<SubTask> tempArr = taskManager.getSubTaskOfEpic(new Epic("1 Epic", "Some description"));
-        for (int i = 0; i < tempArr.size(); i++) {
-            System.out.println(tempArr.get(i).taskStatus);
-        }
+//        for (int i = 0; i < tempArr.size(); i++) {
+//            System.out.println(tempArr.get(i).taskStatus);
+//        }
 
         System.out.println();
 
         ArrayList<Epic> tempArrOfEpic = taskManager.getAllEpicTasks();
-        for (Epic epic : tempArrOfEpic) {
-            System.out.println(epic.taskName + " - " + epic.taskStatus);
-        }
+//        for (Epic epic : tempArrOfEpic) {
+//            System.out.println(epic.taskName + " - " + epic.taskStatus);
+//        }
 
         //taskManager.updateSubTask(new SubTask("2 SubTask of 1 Epic", "Some Description", TaskStatus.NEW), 4);
 
@@ -46,9 +46,9 @@ public class Main {
 
         tempArrOfEpic = taskManager.getAllEpicTasks();
 
-        for (Epic epic : tempArrOfEpic) {
-            System.out.println(epic.taskName + " - " + epic.taskStatus);
-        }
+//        for (Epic epic : tempArrOfEpic) {
+//            System.out.println(epic.taskName + " - " + epic.taskStatus);
+//        }
 
         //taskManager.deleteSubTaskById(4);
 

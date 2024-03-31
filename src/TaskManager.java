@@ -2,9 +2,9 @@ import java.util.HashMap;
 import java.util.ArrayList;
 
 public class TaskManager {
-    public static HashMap<Integer, Task> tasks = new HashMap<>();
-    public static HashMap<Integer, Epic> epicTasks = new HashMap<>();
-    public static HashMap<Integer, SubTask> subTasks = new HashMap<>();
+    private final HashMap<Integer, Task> tasks = new HashMap<>();
+    private final HashMap<Integer, Epic> epicTasks = new HashMap<>();
+    private final HashMap<Integer, SubTask> subTasks = new HashMap<>();
     private static int taskId = 0;
 
     public void addTask(Task newTask) {
@@ -49,6 +49,10 @@ public class TaskManager {
     }
 
     public void deleteAllSubTasks() {
+        for (Integer epicKeys : epicTasks.keySet()) {
+            epicTasks.get(epicKeys).getSubTasks().clear();
+        }
+
         subTasks.clear();
     }
 
@@ -143,26 +147,26 @@ public class TaskManager {
         }
 
         for (int i = 0; i < tempArrSubTasks.size(); i++) {
-            if (tempArrSubTasks.get(i).taskStatus == TaskStatus.IN_PROGRESS) {
+            if (tempArrSubTasks.get(i).getTaskStatus() == TaskStatus.IN_PROGRESS) {
                 for (Integer epicKeys : epicTasks.keySet()) {
                     if (epicTasks.get(epicKeys).equals(tempArrSubTasks.get(i).getEpic())) {
-                        epicTasks.get(epicKeys).taskStatus = TaskStatus.IN_PROGRESS;
+                        epicTasks.get(epicKeys).setTaskStatus(TaskStatus.IN_PROGRESS);
                         return;
                     }
                 }
 
                 return;
-            } else if (tempArrSubTasks.get(i).taskStatus == TaskStatus.DONE) {
+            } else if (tempArrSubTasks.get(i).getTaskStatus() == TaskStatus.DONE) {
                 for (Integer epicKeys : epicTasks.keySet()) {
                     if (epicTasks.get(epicKeys).equals(tempArrSubTasks.get(i).getEpic())) {
-                        epicTasks.get(epicKeys).taskStatus = TaskStatus.DONE;
+                        epicTasks.get(epicKeys).setTaskStatus(TaskStatus.DONE);
                         break;
                     }
                 }
             } else {
                 for (Integer epicKeys : epicTasks.keySet()) {
                     if (epicTasks.get(epicKeys).equals(tempArrSubTasks.get(i).getEpic())) {
-                        epicTasks.get(epicKeys).taskStatus = TaskStatus.NEW;
+                        epicTasks.get(epicKeys).setTaskStatus(TaskStatus.NEW);
                         break;
                     }
                 }

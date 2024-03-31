@@ -1,5 +1,5 @@
 public class SubTask extends Task {
-    protected Epic epic;
+    private Epic epic;
 
     SubTask(String newTaskName, String newDescription, TaskStatus newTaskStatus) {
         super(newTaskName, newDescription, newTaskStatus);

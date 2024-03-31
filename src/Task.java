@@ -1,10 +1,10 @@
 import java.util.Objects;
 
 public class Task {
-    protected String taskName;
-    protected String description;
-    protected int taskId;
-    protected TaskStatus taskStatus;
+    private String taskName;
+    private String description;
+    private int id;
+    private TaskStatus taskStatus;
 
     Task() {
 
@@ -13,7 +13,7 @@ public class Task {
     Task(String newTaskName, String newDescription, TaskStatus newTaskStatus) {
         taskName = newTaskName;
         description = newDescription;
-        taskId = hashCode();
+        id = hashCode();
         taskStatus = newTaskStatus;
     }
 
@@ -23,6 +23,14 @@ public class Task {
 
     public String getDescription() {
         return description;
+    }
+
+    public TaskStatus getTaskStatus() {
+        return taskStatus;
+    }
+
+    public void setTaskStatus(TaskStatus newTaskStatus) {
+        taskStatus = newTaskStatus;
     }
 
     @Override
@@ -47,7 +55,7 @@ public class Task {
         if (this == obj) return true;
         if (obj == null || obj.getClass() != this.getClass()) return false;
         Task someTask = (Task) obj;
-        return taskId == someTask.taskId && Objects.equals(taskName, someTask.taskName)
+        return id == someTask.id && Objects.equals(taskName, someTask.taskName)
                 && Objects.equals(description, someTask.description);
     }
 }
