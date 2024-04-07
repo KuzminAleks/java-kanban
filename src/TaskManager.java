@@ -1,11 +1,12 @@
 import java.util.ArrayList;
+import java.util.List;
 
 public interface TaskManager {
-    void addTask(Task newTask);
+    int addTask(Task newTask);
 
-    void addEpicTask(Epic newEpic);
+    int addEpicTask(Epic newEpic);
 
-    void addSubTask(Epic epic, SubTask newSubTask);
+    int addSubTask(Epic epic, SubTask newSubTask);
 
     ArrayList<Task> getAllTasks();
 
@@ -41,5 +42,5 @@ public interface TaskManager {
 
     void checkEpicStatus(Epic epic);
 
-     ArrayList<Task> getHistory();
+     List<Task> getHistory();
 }

@@ -1,14 +1,15 @@
 import java.util.ArrayList;
+import java.util.List;
 
 public class InMemoryHistoryManager implements HistoryManager {
-    private final ArrayList<Task> lastSeenTasks = new ArrayList<>();
+    private final List<Task> lastSeenTasks = new ArrayList<>();
     @Override
     public void add(Task task) {
-
+        lastSeenTasks.add(task);
     }
 
     @Override
-    public ArrayList<Task> getHistory() {
+    public List<Task> getHistory() {
         return lastSeenTasks;
     }
 }

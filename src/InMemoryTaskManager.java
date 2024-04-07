@@ -1,34 +1,42 @@
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.List;
 
 public class InMemoryTaskManager implements TaskManager {
     private final HashMap<Integer, Task> tasks = new HashMap<>();
     private final HashMap<Integer, Epic> epicTasks = new HashMap<>();
     private final HashMap<Integer, SubTask> subTasks = new HashMap<>();
     private static int taskId = 0;
-    private final ArrayList<Task> lastSeenTasks = new ArrayList<>();
+    private final List<Task> lastSeenTasks = new ArrayList<>();
+    private final HistoryManager historyManager = Managers.getDefaultHistory();
 
     @Override
-    public void addTask(Task newTask) {
+    public int addTask(Task newTask) {
         tasks.put(taskId++, newTask);
+
+        return taskId;
     }
 
     @Override
-    public void addEpicTask(Epic newEpic) {
+    public int addEpicTask(Epic newEpic) {
         epicTasks.put(taskId++, newEpic);
+
+        return taskId;
     }
 
     @Override
-    public void addSubTask(Epic epic, SubTask newSubTask) {
+    public int addSubTask(Epic epic, SubTask newSubTask) {
         for (Integer keys : epicTasks.keySet()) {
             if (epicTasks.get(keys).equals(epic)) {
                 epicTasks.get(keys).addSubTaskToEpic(newSubTask);
                 newSubTask.setEpic(epicTasks.get(keys));
                 subTasks.put(taskId++, newSubTask);
 
-                return;
+                return taskId;
             }
         }
+
+        return -1;
     }
 
     @Override
@@ -216,8 +224,7 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
-    @Override
-    public ArrayList<Task> getHistory() {
-        return lastSeenTasks;
+    public List<Task> getHistory() {
+        return historyManager.getHistory();
     }
 }
