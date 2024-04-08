@@ -1,11 +1,12 @@
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class InMemoryTaskManager implements TaskManager {
-    private final HashMap<Integer, Task> tasks = new HashMap<>();
-    private final HashMap<Integer, Epic> epicTasks = new HashMap<>();
-    private final HashMap<Integer, SubTask> subTasks = new HashMap<>();
+    private final Map<Integer, Task> tasks = new HashMap<>();
+    private final Map<Integer, Epic> epicTasks = new HashMap<>();
+    private final Map<Integer, SubTask> subTasks = new HashMap<>();
     private static int taskId = 0;
     private final List<Task> lastSeenTasks = new ArrayList<>();
     private final HistoryManager historyManager = Managers.getDefaultHistory();
