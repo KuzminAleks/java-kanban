@@ -77,11 +77,12 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task getTaskById(int id) {
-        if (lastSeenTasks.size() <= 10) {
-            lastSeenTasks.add(tasks.get(id));
+        if (historyManager.getHistory().isEmpty()) {
+            historyManager.add(id, tasks.get(id));
+        } else if (historyManager.getHistory().remove(id) != null) {
+            historyManager.add(id, tasks.get(id));
         } else {
-            lastSeenTasks.removeFirst();
-            lastSeenTasks.add(tasks.get(id));
+            historyManager.add(id, tasks.get(id));
         }
 
         return tasks.get(id);
@@ -89,11 +90,12 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Epic getEpicById(int id) {
-        if (lastSeenTasks.size() <= 10) {
-            lastSeenTasks.add(tasks.get(id));
+        if (historyManager.getHistory().isEmpty()) {
+            historyManager.add(id, epicTasks.get(id));
+        } else if (historyManager.getHistory().remove(id) != null) {
+            historyManager.add(id, epicTasks.get(id));
         } else {
-            lastSeenTasks.removeFirst();
-            lastSeenTasks.add(tasks.get(id));
+            historyManager.add(id, epicTasks.get(id));
         }
 
         return epicTasks.get(id);
@@ -101,11 +103,12 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public SubTask getSubTaskById(int id) {
-        if (lastSeenTasks.size() <= 10) {
-            lastSeenTasks.add(tasks.get(id));
+        if (historyManager.getHistory().isEmpty()) {
+            historyManager.add(id, subTasks.get(id));
+        } else if (historyManager.getHistory().remove(id) != null) {
+            historyManager.add(id, subTasks.get(id));
         } else {
-            lastSeenTasks.removeFirst();
-            lastSeenTasks.add(tasks.get(id));
+            historyManager.add(id, subTasks.get(id));
         }
 
         return subTasks.get(id);
@@ -225,7 +228,7 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
-    public List<Task> getHistory() {
+    public Map<Integer, Task> getHistory() {
         return historyManager.getHistory();
     }
 }

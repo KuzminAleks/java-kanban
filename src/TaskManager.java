@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public interface TaskManager {
     int addTask(Task newTask);
@@ -42,5 +43,5 @@ public interface TaskManager {
 
     void checkEpicStatus(Epic epic);
 
-     List<Task> getHistory();
+     Map<Integer, Task> getHistory();
 }
