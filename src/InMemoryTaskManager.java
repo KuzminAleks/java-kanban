@@ -78,11 +78,11 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Task getTaskById(int id) {
         if (historyManager.getHistory().isEmpty()) {
-            historyManager.add(id, tasks.get(id));
+            historyManager.add(tasks.get(id));
         } else if (historyManager.getHistory().remove(id) != null) {
-            historyManager.add(id, tasks.get(id));
+            historyManager.add(tasks.get(id));
         } else {
-            historyManager.add(id, tasks.get(id));
+            historyManager.add(tasks.get(id));
         }
 
         return tasks.get(id);
@@ -91,11 +91,11 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Epic getEpicById(int id) {
         if (historyManager.getHistory().isEmpty()) {
-            historyManager.add(id, epicTasks.get(id));
+            historyManager.add(epicTasks.get(id));
         } else if (historyManager.getHistory().remove(id) != null) {
-            historyManager.add(id, epicTasks.get(id));
+            historyManager.add(epicTasks.get(id));
         } else {
-            historyManager.add(id, epicTasks.get(id));
+            historyManager.add(epicTasks.get(id));
         }
 
         return epicTasks.get(id);
@@ -104,11 +104,11 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public SubTask getSubTaskById(int id) {
         if (historyManager.getHistory().isEmpty()) {
-            historyManager.add(id, subTasks.get(id));
+            historyManager.add(subTasks.get(id));
         } else if (historyManager.getHistory().remove(id) != null) {
-            historyManager.add(id, subTasks.get(id));
+            historyManager.add(subTasks.get(id));
         } else {
-            historyManager.add(id, subTasks.get(id));
+            historyManager.add(subTasks.get(id));
         }
 
         return subTasks.get(id);
@@ -229,6 +229,6 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     public Map<Integer, Task> getHistory() {
-        return historyManager.getHistory();
+        return null;
     }
 }

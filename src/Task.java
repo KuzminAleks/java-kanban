@@ -29,6 +29,10 @@ public class Task {
         return taskStatus;
     }
 
+    public int getTaskId() {
+        return id;
+    }
+
     public void setTaskStatus(TaskStatus newTaskStatus) {
         taskStatus = newTaskStatus;
     }
