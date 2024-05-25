@@ -1,6 +1,5 @@
 import java.util.HashMap;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 public class InMemoryTaskManager implements TaskManager {
@@ -181,26 +180,26 @@ public class InMemoryTaskManager implements TaskManager {
             }
         }
 
-        for (int i = 0; i < tempArrSubTasks.size(); i++) {
-            if (tempArrSubTasks.get(i).getTaskStatus() == TaskStatus.IN_PROGRESS) {
+        for (SubTask tempArrSubTask : tempArrSubTasks) {
+            if (tempArrSubTask.getTaskStatus() == TaskStatus.IN_PROGRESS) {
                 for (Integer epicKeys : epicTasks.keySet()) {
-                    if (epicTasks.get(epicKeys).equals(tempArrSubTasks.get(i).getEpic())) {
+                    if (epicTasks.get(epicKeys).equals(tempArrSubTask.getEpic())) {
                         epicTasks.get(epicKeys).setTaskStatus(TaskStatus.IN_PROGRESS);
                         return;
                     }
                 }
 
                 return;
-            } else if (tempArrSubTasks.get(i).getTaskStatus() == TaskStatus.DONE) {
+            } else if (tempArrSubTask.getTaskStatus() == TaskStatus.DONE) {
                 for (Integer epicKeys : epicTasks.keySet()) {
-                    if (epicTasks.get(epicKeys).equals(tempArrSubTasks.get(i).getEpic())) {
+                    if (epicTasks.get(epicKeys).equals(tempArrSubTask.getEpic())) {
                         epicTasks.get(epicKeys).setTaskStatus(TaskStatus.DONE);
                         break;
                     }
                 }
             } else {
                 for (Integer epicKeys : epicTasks.keySet()) {
-                    if (epicTasks.get(epicKeys).equals(tempArrSubTasks.get(i).getEpic())) {
+                    if (epicTasks.get(epicKeys).equals(tempArrSubTask.getEpic())) {
                         epicTasks.get(epicKeys).setTaskStatus(TaskStatus.NEW);
                         break;
                     }
