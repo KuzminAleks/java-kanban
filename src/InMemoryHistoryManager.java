@@ -1,11 +1,14 @@
-import java.util.*;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.List;
+import java.util.ArrayList;
 
 public class InMemoryHistoryManager implements HistoryManager {
     private final Map<Integer, Node<Task>> history = new HashMap<>();
-    //private final List<Task> history = new ArrayList<>();
 
     public Node<Task> head;
     public Node<Task> tail;
+
     @Override
     public void add(Task task) {
         if (history.isEmpty()) {
