@@ -6,33 +6,28 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     public Node<Task> head;
     public Node<Task> tail;
-    private static int size = 0;
     @Override
     public void add(Task task) {
-        if (size == 0) {
+        if (history.isEmpty()) {
             Node<Task> newNode = new Node<>(task);
 
             head = tail = newNode;
 
             history.put(task.getTaskId(), newNode);
-
-            ++size;
         } else if (history.containsKey(task.getTaskId())) {
-            removeNode(history.get(task.getTaskId()));
+            if (removeNode(history.get(task.getTaskId())) == 1) {
+                Node<Task> newNode = new Node<>(task);
 
-            Node<Task> newNode = new Node<>(task);
+                linkLast(tail, newNode);
 
-            linkLast(tail, newNode);
-
-            history.put(task.getTaskId(), newNode);
+                history.put(task.getTaskId(), newNode);
+            }
         } else {
             Node<Task> newNode = new Node<>(task);
 
             linkLast(tail, newNode);
 
             history.put(task.getTaskId(), newNode);
-
-            ++size;
         }
     }
 
@@ -55,11 +50,17 @@ public class InMemoryHistoryManager implements HistoryManager {
         return arrHistory;
     }
 
-    public void removeNode(Node<Task> task) {
+    public int removeNode(Node<Task> task) {
         if (task == tail) {
+            if (history.size() == 1) {
+                return 0;
+            }
+
             tail = task.prev;
+            tail.next = null;
         } else if (task == head) {
             head = task.next;
+            head.prev = null;
         } else {
             Node<Task> prevElement = task.prev;
             Node<Task> nextElement = task.next;
@@ -68,14 +69,13 @@ public class InMemoryHistoryManager implements HistoryManager {
             prevElement.next = nextElement;
         }
 
-        --size;
+        return 1;
     }
 
     @Override
     public void remove(int id) {
         removeNode(history.get(id));
         history.remove(id);
-        --size;
     }
 
     @Override

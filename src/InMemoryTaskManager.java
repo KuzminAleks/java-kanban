@@ -8,7 +8,6 @@ public class InMemoryTaskManager implements TaskManager {
     private final Map<Integer, Epic> epicTasks = new HashMap<>();
     private final Map<Integer, SubTask> subTasks = new HashMap<>();
     private static int taskId = 0;
-    private final List<Task> lastSeenTasks = new ArrayList<>();
     private final HistoryManager historyManager = Managers.getDefaultHistory();
 
     @Override
@@ -77,39 +76,21 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task getTaskById(int id) {
-        if (historyManager.getHistory().isEmpty()) {
-            historyManager.add(tasks.get(id));
-        } else if (historyManager.getHistory().remove(id) != null) {
-            historyManager.add(tasks.get(id));
-        } else {
-            historyManager.add(tasks.get(id));
-        }
+        historyManager.add(tasks.get(id));
 
         return tasks.get(id);
     }
 
     @Override
     public Epic getEpicById(int id) {
-        if (historyManager.getHistory().isEmpty()) {
-            historyManager.add(epicTasks.get(id));
-        } else if (historyManager.getHistory().remove(id) != null) {
-            historyManager.add(epicTasks.get(id));
-        } else {
-            historyManager.add(epicTasks.get(id));
-        }
+        historyManager.add(epicTasks.get(id));
 
         return epicTasks.get(id);
     }
 
     @Override
     public SubTask getSubTaskById(int id) {
-        if (historyManager.getHistory().isEmpty()) {
-            historyManager.add(subTasks.get(id));
-        } else if (historyManager.getHistory().remove(id) != null) {
-            historyManager.add(subTasks.get(id));
-        } else {
-            historyManager.add(subTasks.get(id));
-        }
+        historyManager.add(subTasks.get(id));
 
         return subTasks.get(id);
     }
