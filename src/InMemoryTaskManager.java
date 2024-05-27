@@ -1,5 +1,6 @@
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class InMemoryTaskManager implements TaskManager {
@@ -135,11 +136,13 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteTaskById(int id) {
+        historyManager.remove(tasks.get(id).getTaskId());
         tasks.remove(id);
     }
 
     @Override
     public void deleteEpicById(int id) {
+        historyManager.remove(epicTasks.get(id).getTaskId());
         ArrayList<Integer> tempArr = new ArrayList<>();
 
         for (Integer keys : subTasks.keySet()) {
@@ -157,6 +160,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteSubTaskById(int id) {
+        historyManager.remove(subTasks.get(id).getTaskId());
         Epic tempEpic = subTasks.get(id).getEpic();
 
         for (Integer epicKeys : epicTasks.keySet()) {
@@ -208,7 +212,7 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
-    public Map<Integer, Task> getHistory() {
-        return null;
+    public List<Task> getHistory() {
+        return historyManager.getHistory();
     }
 }

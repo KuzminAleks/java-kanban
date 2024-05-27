@@ -308,18 +308,24 @@ class InMemoryTaskManagerTest {
 
     @Test
     void shouldRemoveTaskFromHistory() {
-        historyManager.add(new Task("First task", "Some description", TaskStatus.NEW));
-        historyManager.add(new Task("Second task", "Some description", TaskStatus.IN_PROGRESS));
-        historyManager.add(new Task("Third task", "Some description", TaskStatus.IN_PROGRESS));
-        historyManager.add(new Epic("First epic", "Some description"));
+        int firstTask = task.addTask(new Task("First task", "Some description", TaskStatus.NEW));
+        int secondTask = task.addTask(new Task("Second task", "Some description", TaskStatus.IN_PROGRESS));
+        int thirdTask = task.addTask(new Task("Third task", "Some description", TaskStatus.IN_PROGRESS));
+        int firstEpic = task.addEpicTask(new Epic("First epic", "Some description"));
 
-        assertNotNull(historyManager.getHistory());
+        task.getEpicById(firstEpic - 1);
+        task.getTaskById(firstTask - 1);
+        task.getTaskById(thirdTask - 1);
+        task.getTaskById(secondTask - 1);
 
-        historyManager.remove(new Task("Third task", "Some description", TaskStatus.IN_PROGRESS).hashCode());
+        assertNotNull(task.getHistory());
+        assertEquals(task.getHistory().size(), 4);
 
-        assertEquals(historyManager.getHistory().size(), 3);
+        task.deleteTaskById(thirdTask - 1);
 
-        List<Task> tempArr = historyManager.getHistory();
+        assertEquals(task.getHistory().size(), 3);
+
+        List<Task> tempArr = task.getHistory();
 
         for (Task task : tempArr) {
             System.out.println("id: " + task.getTaskId()
@@ -328,33 +334,26 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void shouldRemoveTwoTasksAndChangeTask() {
-        historyManager.add(new Task("First task", "Some description", TaskStatus.NEW));
-        historyManager.add(new Task("Second task", "Some description", TaskStatus.IN_PROGRESS));
-        historyManager.add(new Task("Third task", "Some description", TaskStatus.IN_PROGRESS));
-        historyManager.add(new Epic("First epic", "Some description"));
+    void shouldRemoveTwoTasks() {
+        int firstTask = task.addTask(new Task("First task", "Some description", TaskStatus.NEW));
+        int thirdTask = task.addTask(new Task("Third task", "Some description", TaskStatus.IN_PROGRESS));
+        int firstEpic = task.addEpicTask(new Epic("First epic", "Some description"));
+        int firstSubTask = task.addSubTask(new Epic("First epic", "Some description"), new SubTask("First subtask", "Some description", TaskStatus.IN_PROGRESS));
 
-        assertNotNull(historyManager.getHistory());
+        task.getEpicById(firstEpic - 1);
+        task.getTaskById(firstTask - 1);
+        task.getTaskById(thirdTask - 1);
+        task.getSubTaskById(firstSubTask - 1);
 
-        historyManager.remove(new Task("Second task", "Some description", TaskStatus.IN_PROGRESS).hashCode());
-        historyManager.remove(new Epic("First epic", "Some description").hashCode());
+        assertNotNull(task.getHistory());
+        assertEquals(task.getHistory().size(), 4);
 
-        assertEquals(historyManager.getHistory().size(), 2);
+        task.deleteSubTaskById(firstSubTask - 1);
+        task.deleteTaskById(firstTask - 1);
 
-        List<Task> tempArr = historyManager.getHistory();
+        assertEquals(task.getHistory().size(), 2);
 
-        for (Task task : tempArr) {
-            System.out.println("id: " + task.getTaskId()
-                    + " | task name: " + task.getTaskName() + "\n");
-        }
-
-        System.out.println("----------------------------------------------------");
-
-        historyManager.add(new Task("First task", "Some description", TaskStatus.NEW));
-
-        assertEquals(historyManager.getHistory().size(), 2);
-
-        tempArr = historyManager.getHistory();
+        List<Task> tempArr = task.getHistory();
 
         for (Task task : tempArr) {
             System.out.println("id: " + task.getTaskId()
