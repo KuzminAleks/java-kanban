@@ -360,4 +360,17 @@ class InMemoryTaskManagerTest {
                     + " | task name: " + task.getTaskName() + "\n");
         }
     }
+
+    @Test
+    void fileTest() {
+        FileBackedTaskManager fb = new FileBackedTaskManager();
+
+        Epic epic = new Epic("Epic", "Some description");
+        SubTask subTask = new SubTask("SubTask", "Some description", TaskStatus.NEW );
+        fb.addEpicTask(epic);
+        fb.addSubTask(epic, subTask);
+
+        System.out.println(fb.toString(subTask));
+        System.out.println(fb.toString(epic));
+    }
 }
