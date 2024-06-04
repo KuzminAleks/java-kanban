@@ -182,13 +182,3 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
         }
     }
 }
-
-class ManagerSaveException extends RuntimeException {
-    ManagerSaveException() {
-
-    }
-
-    ManagerSaveException(String par) {
-        System.out.println(par);
-    }
-}
