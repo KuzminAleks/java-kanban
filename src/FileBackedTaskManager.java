@@ -1,15 +1,40 @@
-import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.FileReader;
+import java.io.File;
+import java.io.BufferedReader;
+import java.io.FileWriter;
 import java.util.Map;
 
 public class FileBackedTaskManager extends InMemoryTaskManager implements TaskManager {
+    private final File dataFile;
+
+    public FileBackedTaskManager(File file) {
+        dataFile = file;
+    }
+
+    public static FileBackedTaskManager loadFromFile(File file) {
+        FileBackedTaskManager fbManager = new FileBackedTaskManager(file);
+        fbManager.loadFromFile();
+        return fbManager;
+    }
+
+    public void loadFromFile() {
+        try (FileReader fr = new FileReader(dataFile); BufferedReader br = new BufferedReader(fr)) {
+            while (br.ready()) {
+                String line = br.readLine();
+
+                fromString(line);
+            }
+        } catch (IOException exp) {
+            throw new ManagerSaveException("My error!");
+        }
+    }
+
     public void save() {
         try {
-            Path myPath = Paths.get("D:\\Java_Projects\\java-kanban\\test.txt");
+            //Path myPath = Paths.get("D:\\Java_Projects\\java-kanban\\saveState.txt");
 
-            FileWriter fw = new FileWriter(myPath.toFile());
+            FileWriter fw = new FileWriter(dataFile);
 
             fw.write("id,type,name,status,description,epic\n");
 
@@ -131,8 +156,30 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
         return tp + "," + task.getTaskName() + "," + task.getTaskStatus() + "," + task.getDescription();
     }
 
-    public Task fromString(String str) {
-        return null;
+    public void fromString(String line) {
+        String[] param = line.split(",");
+
+        if (param[1].equals(TaskType.TASK.name())) {
+            if (param[4].equals(TaskStatus.NEW.name())) {
+                super.addTask(new Task(param[2], param[3], TaskStatus.NEW));
+            } else if (param[4].equals(TaskStatus.IN_PROGRESS.name())) {
+                super.addTask(new Task(param[2], param[3], TaskStatus.IN_PROGRESS));
+            } else {
+                super.addTask(new Task(param[2], param[3], TaskStatus.DONE));
+            }
+        } else if (param[1].equals(TaskType.EPIC.name())) {
+            super.addEpicTask(new Epic(param[2], param[4]));
+        } else if (param[1].equals(TaskType.SUBTASK.name())) {
+            if (epicTasks.containsKey(Integer.valueOf(param[5]))) {
+                if (param[3].equals(TaskStatus.NEW.name())) {
+                    super.addSubTask(epicTasks.get(Integer.valueOf(param[5])), new SubTask(param[2], param[4], TaskStatus.NEW));
+                } else if (param[3].equals(TaskStatus.IN_PROGRESS.name())) {
+                    super.addSubTask(epicTasks.get(Integer.valueOf(param[5])), new SubTask(param[2], param[4], TaskStatus.IN_PROGRESS));
+                } else {
+                    super.addSubTask(epicTasks.get(Integer.valueOf(param[5])), new SubTask(param[2], param[4], TaskStatus.DONE));
+                }
+            }
+        }
     }
 }
 
