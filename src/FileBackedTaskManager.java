@@ -5,7 +5,7 @@ import java.io.BufferedReader;
 import java.io.FileWriter;
 import java.util.Map;
 
-public class FileBackedTaskManager extends InMemoryTaskManager implements TaskManager {
+public class FileBackedTaskManager extends InMemoryTaskManager {
     private final File dataFile;
 
     public FileBackedTaskManager(File file) {
@@ -30,10 +30,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
         }
     }
 
-    public void save() {
+    private void save() {
         try {
-            //Path myPath = Paths.get("D:\\Java_Projects\\java-kanban\\saveState.txt");
-
             FileWriter fw = new FileWriter(dataFile);
 
             fw.write("id,type,name,status,description,epic\n");
