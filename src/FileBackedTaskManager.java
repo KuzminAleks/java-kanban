@@ -7,13 +7,9 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
     private final File dataFile;
-    private final Set<Task> sortedTasks = new TreeSet<>((Task task1, Task task2) -> (task1.getStartTime()
-            .isBefore(task2.getStartTime())) ? 1 : -1);
-
     public FileBackedTaskManager(File file) {
         dataFile = file;
     }
@@ -71,23 +67,35 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     @Override
     public int addTask(Task task) {
-        int id = super.addTask(task);
-        save();
-        return id;
+        if (!isIntersect(task)) {
+            int id = super.addTask(task);
+            save();
+            return id;
+        }
+
+        return -1;
     }
 
     @Override
     public int addEpicTask(Epic newEpic) {
-        int id = super.addEpicTask(newEpic);
-        save();
-        return id;
+        if (!isIntersect(newEpic)) {
+            int id = super.addEpicTask(newEpic);
+            save();
+            return id;
+        }
+
+        return -1;
     }
 
     @Override
     public int addSubTask(Epic epic, SubTask newSubTask) {
-        int id = super.addSubTask(epic, newSubTask);
-        save();
-        return id;
+        if (!isIntersect(newSubTask)) {
+            int id = super.addSubTask(epic, newSubTask);
+            save();
+            return id;
+        }
+
+        return -1;
     }
 
     @Override
@@ -110,20 +118,26 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     @Override
     public void updateTask(Task task, int id) {
-        super.updateTask(task, id);
-        save();
+        if (!isIntersect(task)) {
+            super.updateTask(task, id);
+            save();
+        }
     }
 
     @Override
     public void updateEpicTask(Epic epic, int id) {
-        super.updateEpicTask(epic, id);
-        save();
+        if (!isIntersect(epic)) {
+            super.updateEpicTask(epic, id);
+            save();
+        }
     }
 
     @Override
     public void updateSubTask(SubTask subTask, int id) {
-        super.updateSubTask(subTask, id);
-        save();
+        if (!isIntersect(subTask)) {
+            super.updateSubTask(subTask, id);
+            save();
+        }
     }
 
     @Override
@@ -183,11 +197,15 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         }
     }
 
+    @Override
     public Set<Task> getPrioritizedTasks() {
-        sortedTasks.addAll(tasks.values());
+        return super.getPrioritizedTasks();
+    }
 
-        sortedTasks.addAll(subTasks.values());
+    public boolean isIntersect(Task task) {
+        Set<Task> priorTasks = this.getPrioritizedTasks();
 
-        return sortedTasks;
+        return priorTasks.stream()
+                .anyMatch(elem -> Duration.between(task.getStartTime(), elem.getEndTime()).isPositive());
     }
 }

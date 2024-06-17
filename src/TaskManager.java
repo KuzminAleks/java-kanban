@@ -1,4 +1,5 @@
 import java.util.List;
+import java.util.Set;
 
 public interface TaskManager {
     int addTask(Task newTask);
@@ -42,4 +43,6 @@ public interface TaskManager {
     void checkEpicStatus(Epic epic);
 
     List<Task> getHistory();
+
+    Set<Task> getPrioritizedTasks();
 }

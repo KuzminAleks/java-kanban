@@ -420,8 +420,8 @@ class InMemoryTaskManagerTest {
         }
     }
 
-    @Test
-    void shouldLoadFourTasksFromFile() {
+    @BeforeAll
+    static void shouldLoadFourTasksFromFile() {
         try {
             File file = File.createTempFile("temp3", ".txt");
 
@@ -429,9 +429,9 @@ class InMemoryTaskManagerTest {
 
             fw.write("id,type,name,status,description,duration,date,epic\n");
             fw.write("0,TASK,Task 1,IN_PROGRESS,Description,65,2024-12-23T15:15:30,\n");
-            fw.write("1,TASK,Task 2,DONE,Description,120,2024-11-12T11:15:30,\n");
-            fw.write("2,EPIC,Epic 1,IN_PROGRESS,Description epic 1,78,2024-08-22T15:15:30,\n");
-            fw.write("3,SUBTASK,SubTask 1 of epic 1,IN_PROGRESS,Description,78,2024-08-22T15:15:30,2\n");
+            fw.write("1,TASK,Task 2,DONE,Description,120,2023-11-12T11:15:30,\n");
+            fw.write("2,EPIC,Epic 1,IN_PROGRESS,Description epic 1,78,2022-08-22T15:15:30,\n");
+            fw.write("3,SUBTASK,SubTask 1 of epic 1,IN_PROGRESS,Description,78,2022-08-22T15:15:30,2\n");
             fw.write("4,SUBTASK,SubTask 2 of epic 1,NEW,Description,90,2024-07-22T10:20:00,2\n");
 
             fw.close();
@@ -452,19 +452,55 @@ class InMemoryTaskManagerTest {
                         + task.getDuration().toMinutesPart() + "min");
             }
 
+            List<SubTask> tempArrSubTasks = task.getAllSubTasks();
 
+            for (SubTask task : tempArrSubTasks) {
+                System.out.println(task.getTaskName());
+            }
+
+            System.out.println();
+
+            Set<Task> tempSet = task.getPrioritizedTasks();
+
+            for (Task task : tempSet) {
+                System.out.println(task.getTaskName());
+            }
 
             assertEquals(task.getAllTasks().size(), 2);
             assertEquals(task.getAllEpicTasks().size(), 1);
             assertEquals(task.getAllSubTasks().size(), 2);
+        } catch (IOException exp) {
+            exp.printStackTrace();
+        }
+    }
 
-            FileBackedTaskManager fbm = FileBackedTaskManager.loadFromFile(file);
+    @Test
+    void Tests() {
+        try {
+            File file = File.createTempFile("temp2", ".txt");
+            task = FileBackedTaskManager.loadFromFile(file);
 
-            Set<Task> tempSetTask = fbm.getPrioritizedTasks();
+            task.addTask(new Task("Task 1", "Description", TaskStatus.IN_PROGRESS, Duration.ofMinutes(20), LocalDateTime.now()));
 
-            for (Task task : tempSetTask) {
-                System.out.println(task.getTaskName() + " - " + task.getStartTime());
+//            task.addEpicTask(new Epic("Epic 1", "Description epic 1"));
+//            task.addSubTask(new Epic("Epic 1", "Description epic 1"), new SubTask("SubTask 1 of epic 1", "Description", TaskStatus.NEW, Duration.ofMinutes(12), LocalDateTime.of(2024,1,1,13,0)));
+//            task.addSubTask(new Epic("Epic 1", "Description epic 1"), new SubTask("SubTask 2 of epic 1", "Description", TaskStatus.IN_PROGRESS, Duration.ofMinutes(65), LocalDateTime.of(2024,6,13,15,0)));
+//            task.addSubTask(new Epic("Epic 1", "Description epic 1"), new SubTask("SubTask 3 of epic 1", "Description", TaskStatus.DONE, Duration.ofMinutes(129), LocalDateTime.now()));
+//
+//            task.addEpicTask(new Epic("Epic 2", "Description epic 2"));
+//            task.addSubTask(new Epic("Epic 2", "Description epic 2"), new SubTask("SubTask 1 of epic 2", "Description", TaskStatus.DONE, Duration.ofMinutes(20), LocalDateTime.now()));
+//            task.addSubTask(new Epic("Epic 2", "Description epic 2"), new SubTask("SubTask 2 of epic 2", "Description", TaskStatus.DONE, Duration.ofMinutes(230), LocalDateTime.now()));
+//
+//            task.addTask(new Task("Task 2", "Description", TaskStatus.DONE, Duration.ofMinutes(35), LocalDateTime.now()));
+
+            FileReader fr = new FileReader(file);
+            BufferedReader br = new BufferedReader(fr);
+
+            while (br.ready()) {
+                System.out.println(br.readLine());
             }
+
+            br.close();
         } catch (IOException exp) {
             exp.printStackTrace();
         }
