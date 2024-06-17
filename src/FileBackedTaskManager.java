@@ -3,10 +3,16 @@ import java.io.FileReader;
 import java.io.File;
 import java.io.BufferedReader;
 import java.io.FileWriter;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
     private final File dataFile;
+    private final Set<Task> sortedTasks = new TreeSet<>((Task task1, Task task2) -> (task1.getStartTime()
+            .isBefore(task2.getStartTime())) ? 1 : -1);
 
     public FileBackedTaskManager(File file) {
         dataFile = file;
@@ -34,7 +40,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         try {
             FileWriter fw = new FileWriter(dataFile);
 
-            fw.write("id,type,name,status,description,epic\n");
+            fw.write("id,type,name,status,description,duration,date,epic\n");
 
             for (Integer keys : tasks.keySet()) {
                 fw.write(keys + "," + toString(tasks.get(keys)) + ",\n");
@@ -54,7 +60,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                     }
                 }
 
-                fw.write(keys + "," + toString(subTasks.get(keys)) + epicId + ",\n");
+                fw.write(keys + "," + toString(subTasks.get(keys)) + "," + epicId + ",\n");
             }
 
             fw.close();
@@ -139,19 +145,16 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     public String toString(Task task) {
-        TaskType tp;
-
         if (task instanceof Epic) {
-            tp = TaskType.EPIC;
+            return TaskType.EPIC + "," + task.getTaskName() + "," + task.getTaskStatus() + "," + task.getDescription()
+                    + "," + task.getDuration().toMinutes() + "," + task.getStartTime();
         } else if (task instanceof SubTask) {
-            tp = TaskType.SUBTASK;
-
-            return tp + "," + task.getTaskName() + "," + task.getTaskStatus() + "," + task.getDescription() + ",";
+            return TaskType.SUBTASK + "," + task.getTaskName() + "," + task.getTaskStatus() + ","
+                    + task.getDescription() + "," + task.getDuration().toMinutes() + "," + task.getStartTime();
         } else {
-            tp = TaskType.TASK;
+            return TaskType.TASK + "," + task.getTaskName() + "," + task.getTaskStatus() + "," + task.getDescription()
+                    + task.getDescription() + "," + task.getDuration().toMinutes() + "," + task.getStartTime();
         }
-
-        return tp + "," + task.getTaskName() + "," + task.getTaskStatus() + "," + task.getDescription();
     }
 
     public void fromString(String line) {
@@ -159,24 +162,32 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
         if (param[1].equals(TaskType.TASK.name())) {
             if (param[4].equals(TaskStatus.NEW.name())) {
-                super.addTask(new Task(param[2], param[3], TaskStatus.NEW));
+                super.addTask(new Task(param[2], param[3], TaskStatus.NEW, Duration.ofMinutes(Long.parseLong(param[5])), LocalDateTime.parse(param[6])));
             } else if (param[4].equals(TaskStatus.IN_PROGRESS.name())) {
-                super.addTask(new Task(param[2], param[3], TaskStatus.IN_PROGRESS));
+                super.addTask(new Task(param[2], param[3], TaskStatus.IN_PROGRESS, Duration.ofMinutes(Long.parseLong(param[5])), LocalDateTime.parse(param[6])));
             } else {
-                super.addTask(new Task(param[2], param[3], TaskStatus.DONE));
+                super.addTask(new Task(param[2], param[3], TaskStatus.DONE, Duration.ofMinutes(Long.parseLong(param[5])), LocalDateTime.parse(param[6])));
             }
         } else if (param[1].equals(TaskType.EPIC.name())) {
             super.addEpicTask(new Epic(param[2], param[4]));
         } else if (param[1].equals(TaskType.SUBTASK.name())) {
-            if (epicTasks.containsKey(Integer.valueOf(param[5]))) {
+            if (epicTasks.containsKey(Integer.valueOf(param[7]))) {
                 if (param[3].equals(TaskStatus.NEW.name())) {
-                    super.addSubTask(epicTasks.get(Integer.valueOf(param[5])), new SubTask(param[2], param[4], TaskStatus.NEW));
+                    super.addSubTask(epicTasks.get(Integer.valueOf(param[7])), new SubTask(param[2], param[4], TaskStatus.NEW, Duration.ofMinutes(Long.parseLong(param[5])), LocalDateTime.parse(param[6])));
                 } else if (param[3].equals(TaskStatus.IN_PROGRESS.name())) {
-                    super.addSubTask(epicTasks.get(Integer.valueOf(param[5])), new SubTask(param[2], param[4], TaskStatus.IN_PROGRESS));
+                    super.addSubTask(epicTasks.get(Integer.valueOf(param[7])), new SubTask(param[2], param[4], TaskStatus.IN_PROGRESS, Duration.ofMinutes(Long.parseLong(param[5])), LocalDateTime.parse(param[6])));
                 } else {
-                    super.addSubTask(epicTasks.get(Integer.valueOf(param[5])), new SubTask(param[2], param[4], TaskStatus.DONE));
+                    super.addSubTask(epicTasks.get(Integer.valueOf(param[7])), new SubTask(param[2], param[4], TaskStatus.DONE, Duration.ofMinutes(Long.parseLong(param[5])), LocalDateTime.parse(param[6])));
                 }
             }
         }
+    }
+
+    public Set<Task> getPrioritizedTasks() {
+        sortedTasks.addAll(tasks.values());
+
+        sortedTasks.addAll(subTasks.values());
+
+        return sortedTasks;
     }
 }

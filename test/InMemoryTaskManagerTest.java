@@ -7,7 +7,10 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.BufferedReader;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -23,9 +26,7 @@ class InMemoryTaskManagerTest {
 
     @Test
     void addTask() {
-        historyManager = new InMemoryHistoryManager();
-        task = new InMemoryTaskManager();
-        Task someTask = new Task("1 Task", "Some description", TaskStatus.NEW);
+        Task someTask = new Task("1 Task", "Some description", TaskStatus.NEW, Duration.ofMinutes(30), LocalDateTime.now());
         int idTask = task.addTask(someTask);
         Task task1 = task.getTaskById(idTask - 1);
 
@@ -61,7 +62,7 @@ class InMemoryTaskManagerTest {
         Epic someEpic = new Epic("1 Task", "Some description");
         task.addEpicTask(someEpic);
 
-        SubTask someSubTask = new SubTask("1 Task", "Some description", TaskStatus.NEW);
+        SubTask someSubTask = new SubTask("1 Task", "Some description", TaskStatus.NEW, Duration.ofMinutes(65), LocalDateTime.now());
         int idTask = task.addSubTask(someEpic, someSubTask);
 
         assertNotNull(task.getSubTaskById(idTask - 1), "Такого задания нет!");
@@ -77,9 +78,9 @@ class InMemoryTaskManagerTest {
 
     @Test
     void deleteAllTasks() {
-        Task someTask1 = new Task("1 Task", "Some description", TaskStatus.NEW);
-        Task someTask2 = new Task("2 Task", "Some description", TaskStatus.NEW);
-        Task someTask3 = new Task("3 Task", "Some description", TaskStatus.NEW);
+        Task someTask1 = new Task("1 Task", "Some description", TaskStatus.NEW, Duration.ofMinutes(40), LocalDateTime.now());
+        Task someTask2 = new Task("2 Task", "Some description", TaskStatus.NEW, Duration.ofMinutes(80), LocalDateTime.now());
+        Task someTask3 = new Task("3 Task", "Some description", TaskStatus.NEW, Duration.ofMinutes(90), LocalDateTime.now());
 
         task.addTask(someTask1);
         task.addTask(someTask2);
@@ -113,9 +114,9 @@ class InMemoryTaskManagerTest {
     void deleteAllSubTasks() {
         Epic someEpic = new Epic("1 Task", "Some description");
 
-        SubTask someSubTask1 = new SubTask("1 Task", "Some description", TaskStatus.NEW);
-        SubTask someSubTask2 = new SubTask("2 Task", "Some description", TaskStatus.NEW);
-        SubTask someSubTask3 = new SubTask("3 Task", "Some description", TaskStatus.NEW);
+        SubTask someSubTask1 = new SubTask("1 Task", "Some description", TaskStatus.NEW, Duration.ofMinutes(60), LocalDateTime.now());
+        SubTask someSubTask2 = new SubTask("2 Task", "Some description", TaskStatus.NEW, Duration.ofMinutes(10), LocalDateTime.now());
+        SubTask someSubTask3 = new SubTask("3 Task", "Some description", TaskStatus.NEW, Duration.ofMinutes(120), LocalDateTime.now());
 
         task.addSubTask(someEpic, someSubTask1);
         task.addSubTask(someEpic, someSubTask2);
@@ -134,9 +135,9 @@ class InMemoryTaskManagerTest {
 
         task.addEpicTask(someEpic);
 
-        SubTask someSubTask1 = new SubTask("1 Task", "Some description", TaskStatus.NEW);
-        SubTask someSubTask2 = new SubTask("2 Task", "Some description", TaskStatus.NEW);
-        SubTask someSubTask3 = new SubTask("3 Task", "Some description", TaskStatus.NEW);
+        SubTask someSubTask1 = new SubTask("1 Task", "Some description", TaskStatus.NEW, Duration.ofMinutes(60), LocalDateTime.now());
+        SubTask someSubTask2 = new SubTask("2 Task", "Some description", TaskStatus.NEW, Duration.ofMinutes(70), LocalDateTime.now());
+        SubTask someSubTask3 = new SubTask("3 Task", "Some description", TaskStatus.NEW, Duration.ofMinutes(100), LocalDateTime.now());
 
         task.addSubTask(someEpic, someSubTask1);
         task.addSubTask(someEpic, someSubTask2);
@@ -148,7 +149,7 @@ class InMemoryTaskManagerTest {
 
     @Test
     void updateTask() {
-        Task someTask = new Task("1 Task", "Some description", TaskStatus.NEW);
+        Task someTask = new Task("1 Task", "Some description", TaskStatus.NEW, Duration.ofMinutes(60), LocalDateTime.now());
 
         String taskName = "1 Task";
         String taskDescription = "Some description";
@@ -156,7 +157,7 @@ class InMemoryTaskManagerTest {
 
         int idTask = task.addTask(someTask) - 1;
 
-        Task someUpdatedTask = new Task("1.1 Task", "Some description and MORE!!!", TaskStatus.IN_PROGRESS);
+        Task someUpdatedTask = new Task("1.1 Task", "Some description and MORE!!!", TaskStatus.IN_PROGRESS, Duration.ofMinutes(20), LocalDateTime.now());
 
         task.updateTask(someUpdatedTask, idTask);
 
@@ -194,7 +195,7 @@ class InMemoryTaskManagerTest {
 
         task.addEpicTask(someEpic);
 
-        SubTask someTask = new SubTask("1 Task", "Some description", TaskStatus.NEW);
+        SubTask someTask = new SubTask("1 Task", "Some description", TaskStatus.NEW, Duration.ofMinutes(30), LocalDateTime.now());
 
         String taskName = "1 Task";
         String taskDescription = "Some description";
@@ -202,7 +203,7 @@ class InMemoryTaskManagerTest {
 
         int idSubTask = task.addSubTask(someEpic, someTask) - 1;
 
-        SubTask someUpdatedSubTask = new SubTask("1.1 Task", "Some description and MORE!!!", TaskStatus.DONE);
+        SubTask someUpdatedSubTask = new SubTask("1.1 Task", "Some description and MORE!!!", TaskStatus.DONE, Duration.ofMinutes(10), LocalDateTime.now());
 
         task.updateSubTask(someUpdatedSubTask, idSubTask);
 
@@ -216,7 +217,7 @@ class InMemoryTaskManagerTest {
 
     @Test
     void deleteTaskById() {
-        Task someTask = new Task("1 Task", "Some description", TaskStatus.NEW);
+        Task someTask = new Task("1 Task", "Some description", TaskStatus.NEW, Duration.ofMinutes(30), LocalDateTime.now());
 
         int idTask = task.addTask(someTask) - 1;
 
@@ -248,7 +249,7 @@ class InMemoryTaskManagerTest {
 
         task.addEpicTask(someEpic);
 
-        SubTask someSubTask = new SubTask("1 Task", "Some description", TaskStatus.NEW);
+        SubTask someSubTask = new SubTask("1 Task", "Some description", TaskStatus.NEW, Duration.ofMinutes(30), LocalDateTime.now());
 
         int idSubTask = task.addSubTask(someEpic, someSubTask) - 1;
 
@@ -272,11 +273,11 @@ class InMemoryTaskManagerTest {
 
     @Test
     void shouldReturnArrayHistoryFiveTasks() {
-        historyManager.add(new Task("First task", "Some description", TaskStatus.NEW));
-        historyManager.add(new Task("Second task", "Some description", TaskStatus.IN_PROGRESS));
-        historyManager.add(new Task("Third task", "Some description", TaskStatus.IN_PROGRESS));
+        historyManager.add(new Task("First task", "Some description", TaskStatus.NEW, Duration.ofMinutes(30), LocalDateTime.now()));
+        historyManager.add(new Task("Second task", "Some description", TaskStatus.IN_PROGRESS, Duration.ofMinutes(20), LocalDateTime.now()));
+        historyManager.add(new Task("Third task", "Some description", TaskStatus.IN_PROGRESS, Duration.ofMinutes(50), LocalDateTime.now()));
         historyManager.add(new Epic("First epic", "Some description"));
-        historyManager.add(new SubTask("First subtask", "Some description", TaskStatus.IN_PROGRESS));
+        historyManager.add(new SubTask("First subtask", "Some description", TaskStatus.IN_PROGRESS, Duration.ofMinutes(60), LocalDateTime.now()));
 
         assertNotNull(historyManager.getHistory());
 
@@ -285,11 +286,11 @@ class InMemoryTaskManagerTest {
 
     @Test
     void shouldReturnChangedHistory() {
-        historyManager.add(new Task("First task", "Some description", TaskStatus.NEW));
-        historyManager.add(new Task("Second task", "Some description", TaskStatus.IN_PROGRESS));
-        historyManager.add(new Task("Third task", "Some description", TaskStatus.IN_PROGRESS));
+        historyManager.add(new Task("First task", "Some description", TaskStatus.NEW, Duration.ofMinutes(120), LocalDateTime.now()));
+        historyManager.add(new Task("Second task", "Some description", TaskStatus.IN_PROGRESS, Duration.ofMinutes(90), LocalDateTime.now()));
+        historyManager.add(new Task("Third task", "Some description", TaskStatus.IN_PROGRESS, Duration.ofMinutes(20), LocalDateTime.now()));
         historyManager.add(new Epic("First epic", "Some description"));
-        historyManager.add(new SubTask("First subtask", "Some description", TaskStatus.IN_PROGRESS));
+        historyManager.add(new SubTask("First subtask", "Some description", TaskStatus.IN_PROGRESS, Duration.ofMinutes(50), LocalDateTime.now()));
 
         assertNotNull(historyManager.getHistory());
 
@@ -302,7 +303,7 @@ class InMemoryTaskManagerTest {
 
         System.out.println("----------------------------------------------------");
 
-        historyManager.add(new Task("Second task", "Some description", TaskStatus.IN_PROGRESS));
+        historyManager.add(new Task("Second task", "Some description", TaskStatus.IN_PROGRESS, Duration.ofMinutes(60), LocalDateTime.now()));
 
         tempArr = historyManager.getHistory();
 
@@ -314,9 +315,9 @@ class InMemoryTaskManagerTest {
 
     @Test
     void shouldRemoveTaskFromHistory() {
-        int firstTask = task.addTask(new Task("First task", "Some description", TaskStatus.NEW));
-        int secondTask = task.addTask(new Task("Second task", "Some description", TaskStatus.IN_PROGRESS));
-        int thirdTask = task.addTask(new Task("Third task", "Some description", TaskStatus.IN_PROGRESS));
+        int firstTask = task.addTask(new Task("First task", "Some description", TaskStatus.NEW, Duration.ofMinutes(20), LocalDateTime.now()));
+        int secondTask = task.addTask(new Task("Second task", "Some description", TaskStatus.IN_PROGRESS, Duration.ofMinutes(40), LocalDateTime.now()));
+        int thirdTask = task.addTask(new Task("Third task", "Some description", TaskStatus.IN_PROGRESS, Duration.ofMinutes(120), LocalDateTime.now()));
         int firstEpic = task.addEpicTask(new Epic("First epic", "Some description"));
 
         task.getEpicById(firstEpic - 1);
@@ -341,10 +342,10 @@ class InMemoryTaskManagerTest {
 
     @Test
     void shouldRemoveTwoTasks() {
-        int firstTask = task.addTask(new Task("First task", "Some description", TaskStatus.NEW));
-        int thirdTask = task.addTask(new Task("Third task", "Some description", TaskStatus.IN_PROGRESS));
+        int firstTask = task.addTask(new Task("First task", "Some description", TaskStatus.NEW, Duration.ofMinutes(30), LocalDateTime.now()));
+        int thirdTask = task.addTask(new Task("Third task", "Some description", TaskStatus.IN_PROGRESS, Duration.ofMinutes(30), LocalDateTime.now()));
         int firstEpic = task.addEpicTask(new Epic("First epic", "Some description"));
-        int firstSubTask = task.addSubTask(new Epic("First epic", "Some description"), new SubTask("First subtask", "Some description", TaskStatus.IN_PROGRESS));
+        int firstSubTask = task.addSubTask(new Epic("First epic", "Some description"), new SubTask("First subtask", "Some description", TaskStatus.IN_PROGRESS, Duration.ofMinutes(30), LocalDateTime.now()));
 
         task.getEpicById(firstEpic - 1);
         task.getTaskById(firstTask - 1);
@@ -387,18 +388,18 @@ class InMemoryTaskManagerTest {
             File file = File.createTempFile("temp2", ".txt");
             task = FileBackedTaskManager.loadFromFile(file);
 
-            task.addTask(new Task("Task 1", "Description", TaskStatus.IN_PROGRESS));
+            task.addTask(new Task("Task 1", "Description", TaskStatus.IN_PROGRESS, Duration.ofMinutes(20), LocalDateTime.now()));
 
             task.addEpicTask(new Epic("Epic 1", "Description epic 1"));
-            task.addSubTask(new Epic("Epic 1", "Description epic 1"), new SubTask("SubTask 1 of epic 1", "Description", TaskStatus.NEW));
-            task.addSubTask(new Epic("Epic 1", "Description epic 1"), new SubTask("SubTask 2 of epic 1", "Description", TaskStatus.IN_PROGRESS));
-            task.addSubTask(new Epic("Epic 1", "Description epic 1"), new SubTask("SubTask 3 of epic 1", "Description", TaskStatus.DONE));
+            task.addSubTask(new Epic("Epic 1", "Description epic 1"), new SubTask("SubTask 1 of epic 1", "Description", TaskStatus.NEW, Duration.ofMinutes(12), LocalDateTime.of(2024,1,1,13,0)));
+            task.addSubTask(new Epic("Epic 1", "Description epic 1"), new SubTask("SubTask 2 of epic 1", "Description", TaskStatus.IN_PROGRESS, Duration.ofMinutes(65), LocalDateTime.of(2024,6,13,15,0)));
+            task.addSubTask(new Epic("Epic 1", "Description epic 1"), new SubTask("SubTask 3 of epic 1", "Description", TaskStatus.DONE, Duration.ofMinutes(129), LocalDateTime.now()));
 
             task.addEpicTask(new Epic("Epic 2", "Description epic 2"));
-            task.addSubTask(new Epic("Epic 2", "Description epic 2"), new SubTask("SubTask 1 of epic 2", "Description", TaskStatus.DONE));
-            task.addSubTask(new Epic("Epic 2", "Description epic 2"), new SubTask("SubTask 2 of epic 2", "Description", TaskStatus.DONE));
+            task.addSubTask(new Epic("Epic 2", "Description epic 2"), new SubTask("SubTask 1 of epic 2", "Description", TaskStatus.DONE, Duration.ofMinutes(20), LocalDateTime.now()));
+            task.addSubTask(new Epic("Epic 2", "Description epic 2"), new SubTask("SubTask 2 of epic 2", "Description", TaskStatus.DONE, Duration.ofMinutes(230), LocalDateTime.now()));
 
-            task.addTask(new Task("Task 2", "Description", TaskStatus.DONE));
+            task.addTask(new Task("Task 2", "Description", TaskStatus.DONE, Duration.ofMinutes(35), LocalDateTime.now()));
 
             assertEquals(task.getAllTasks().size(), 2);
             assertEquals(task.getAllEpicTasks().size(), 2);
@@ -419,26 +420,51 @@ class InMemoryTaskManagerTest {
         }
     }
 
-    @BeforeAll
-    static void shouldLoadFourTasksFromFile() {
+    @Test
+    void shouldLoadFourTasksFromFile() {
         try {
             File file = File.createTempFile("temp3", ".txt");
 
             FileWriter fw = new FileWriter(file);
 
-            fw.write("id,type,name,status,description,epic\n");
-            fw.write("0,TASK,Task 1,IN_PROGRESS,Description,\n");
-            fw.write("1,TASK,Task 2,DONE,Description,\n");
-            fw.write("2,EPIC,Epic 1,IN_PROGRESS,Description epic 1,\n");
-            fw.write("3,SUBTASK,SubTask 1 of epic 1,IN_PROGRESS,Description,2,\n");
+            fw.write("id,type,name,status,description,duration,date,epic\n");
+            fw.write("0,TASK,Task 1,IN_PROGRESS,Description,65,2024-12-23T15:15:30,\n");
+            fw.write("1,TASK,Task 2,DONE,Description,120,2024-11-12T11:15:30,\n");
+            fw.write("2,EPIC,Epic 1,IN_PROGRESS,Description epic 1,78,2024-08-22T15:15:30,\n");
+            fw.write("3,SUBTASK,SubTask 1 of epic 1,IN_PROGRESS,Description,78,2024-08-22T15:15:30,2\n");
+            fw.write("4,SUBTASK,SubTask 2 of epic 1,NEW,Description,90,2024-07-22T10:20:00,2\n");
 
             fw.close();
 
             task = FileBackedTaskManager.loadFromFile(file);
 
+            List<Epic> tempArr = task.getAllEpicTasks();
+
+            for (Epic epic : tempArr) {
+                System.out.println(epic.getStartTime());
+                System.out.println(epic.getEndTime());
+            }
+
+            List<Task> tempArrTasks = task.getAllTasks();
+
+            for (Task task : tempArrTasks) {
+                System.out.println(task.getTaskName() + " duration: " + task.getDuration().toHours() + "h "
+                        + task.getDuration().toMinutesPart() + "min");
+            }
+
+
+
             assertEquals(task.getAllTasks().size(), 2);
             assertEquals(task.getAllEpicTasks().size(), 1);
-            assertEquals(task.getAllSubTasks().size(), 1);
+            assertEquals(task.getAllSubTasks().size(), 2);
+
+            FileBackedTaskManager fbm = FileBackedTaskManager.loadFromFile(file);
+
+            Set<Task> tempSetTask = fbm.getPrioritizedTasks();
+
+            for (Task task : tempSetTask) {
+                System.out.println(task.getTaskName() + " - " + task.getStartTime());
+            }
         } catch (IOException exp) {
             exp.printStackTrace();
         }
