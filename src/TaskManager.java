@@ -45,4 +45,6 @@ public interface TaskManager {
     List<Task> getHistory();
 
     Set<Task> getPrioritizedTasks();
+
+    boolean isIntersect(Task task);
 }

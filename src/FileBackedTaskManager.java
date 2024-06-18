@@ -202,10 +202,12 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         return super.getPrioritizedTasks();
     }
 
+    @Override
     public boolean isIntersect(Task task) {
         Set<Task> priorTasks = this.getPrioritizedTasks();
 
         return priorTasks.stream()
-                .anyMatch(elem -> Duration.between(task.getStartTime(), elem.getEndTime()).isPositive());
+                .anyMatch(elem -> task.getEndTime().isAfter(elem.getStartTime())
+                        && task.getStartTime().isBefore(elem.getEndTime()));
     }
 }
