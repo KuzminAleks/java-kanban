@@ -6,8 +6,9 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class InMemoryTaskManagerTest {
-    private static InMemoryTaskManager task;
+    private static TaskManager task;
     private static HistoryManager historyManager;
+
     @BeforeEach
     void BeforeEach() {
         task = new InMemoryTaskManager();
@@ -16,10 +17,13 @@ class InMemoryTaskManagerTest {
 
     @Test
     void addTask() {
+        historyManager = new InMemoryHistoryManager();
+        task = new InMemoryTaskManager();
         Task someTask = new Task("1 Task", "Some description", TaskStatus.NEW);
         int idTask = task.addTask(someTask);
+        Task task1 = task.getTaskById(idTask - 1);
 
-        assertNotNull(task.getTaskById(idTask - 1), "Такого задания нет!");
+        assertNotNull(task1, "Такого задания нет!");
         assertEquals(someTask, task.getTaskById(idTask - 1), "Задания не совпадают");
         assertEquals(task.getTaskById(idTask - 1), task.getTaskById(idTask - 1), "Задания не совпадают");
 
@@ -27,7 +31,7 @@ class InMemoryTaskManagerTest {
 
         assertNotNull(tempArr, "Список не получен!");
         assertEquals(1, tempArr.size(), "Список пуст!");
-        assertEquals(someTask, tempArr.get(0));
+        assertEquals(someTask, tempArr.getFirst());
     }
 
     @Test
@@ -43,7 +47,7 @@ class InMemoryTaskManagerTest {
 
         assertNotNull(tempArr, "Список не получен!");
         assertEquals(1, tempArr.size(), "Список пуст!");
-        assertEquals(someEpic, tempArr.get(0));
+        assertEquals(someEpic, tempArr.getFirst());
     }
 
     @Test
@@ -62,7 +66,7 @@ class InMemoryTaskManagerTest {
 
         assertNotNull(tempArr, "Список не получен!");
         assertEquals(1, tempArr.size(), "Список пуст!");
-        assertEquals(someSubTask, tempArr.get(0));
+        assertEquals(someSubTask, tempArr.getFirst());
     }
 
     @Test
@@ -251,24 +255,6 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void getHistory() {
-        historyManager.add(new Task("1 Task", "Some description", TaskStatus.NEW));
-
-        List<Task> history = historyManager.getHistory();
-
-        assertNotNull(history, "История пустая!");
-        assertEquals(1, history.size(), "История пустая!");
-
-        historyManager.add(new Task("2 Task", "Some description", TaskStatus.DONE));
-
-        history = historyManager.getHistory();
-
-        assertNotNull(history, "История пустая!");
-        assertEquals(2, history.size(), "История пустая!");
-        assertEquals(new Task("2 Task", "Some description", TaskStatus.DONE), history.getLast());
-    }
-
-    @Test
     void shouldReturnNotNullTaskManager() {
         assertNotNull(Managers.getDefault());
     }
@@ -276,5 +262,102 @@ class InMemoryTaskManagerTest {
     @Test
     void shouldReturnNotNullHistoryManager() {
         assertNotNull(Managers.getDefaultHistory());
+    }
+
+    @Test
+    void shouldReturnArrayHistoryFiveTasks() {
+        historyManager.add(new Task("First task", "Some description", TaskStatus.NEW));
+        historyManager.add(new Task("Second task", "Some description", TaskStatus.IN_PROGRESS));
+        historyManager.add(new Task("Third task", "Some description", TaskStatus.IN_PROGRESS));
+        historyManager.add(new Epic("First epic", "Some description"));
+        historyManager.add(new SubTask("First subtask", "Some description", TaskStatus.IN_PROGRESS));
+
+        assertNotNull(historyManager.getHistory());
+
+        assertEquals(historyManager.getHistory().size(), 5);
+    }
+
+    @Test
+    void shouldReturnChangedHistory() {
+        historyManager.add(new Task("First task", "Some description", TaskStatus.NEW));
+        historyManager.add(new Task("Second task", "Some description", TaskStatus.IN_PROGRESS));
+        historyManager.add(new Task("Third task", "Some description", TaskStatus.IN_PROGRESS));
+        historyManager.add(new Epic("First epic", "Some description"));
+        historyManager.add(new SubTask("First subtask", "Some description", TaskStatus.IN_PROGRESS));
+
+        assertNotNull(historyManager.getHistory());
+
+        List<Task> tempArr = historyManager.getHistory();
+
+        for (Task task : tempArr) {
+            System.out.println("id: " + task.getTaskId()
+                    + " | task name: " + task.getTaskName() + "\n");
+        }
+
+        System.out.println("----------------------------------------------------");
+
+        historyManager.add(new Task("Second task", "Some description", TaskStatus.IN_PROGRESS));
+
+        tempArr = historyManager.getHistory();
+
+        for (Task task : tempArr) {
+            System.out.println("id: " + task.getTaskId()
+                    + " | task name: " + task.getTaskName() + "\n");
+        }
+    }
+
+    @Test
+    void shouldRemoveTaskFromHistory() {
+        int firstTask = task.addTask(new Task("First task", "Some description", TaskStatus.NEW));
+        int secondTask = task.addTask(new Task("Second task", "Some description", TaskStatus.IN_PROGRESS));
+        int thirdTask = task.addTask(new Task("Third task", "Some description", TaskStatus.IN_PROGRESS));
+        int firstEpic = task.addEpicTask(new Epic("First epic", "Some description"));
+
+        task.getEpicById(firstEpic - 1);
+        task.getTaskById(firstTask - 1);
+        task.getTaskById(thirdTask - 1);
+        task.getTaskById(secondTask - 1);
+
+        assertNotNull(task.getHistory());
+        assertEquals(task.getHistory().size(), 4);
+
+        task.deleteTaskById(thirdTask - 1);
+
+        assertEquals(task.getHistory().size(), 3);
+
+        List<Task> tempArr = task.getHistory();
+
+        for (Task task : tempArr) {
+            System.out.println("id: " + task.getTaskId()
+                    + " | task name: " + task.getTaskName() + "\n");
+        }
+    }
+
+    @Test
+    void shouldRemoveTwoTasks() {
+        int firstTask = task.addTask(new Task("First task", "Some description", TaskStatus.NEW));
+        int thirdTask = task.addTask(new Task("Third task", "Some description", TaskStatus.IN_PROGRESS));
+        int firstEpic = task.addEpicTask(new Epic("First epic", "Some description"));
+        int firstSubTask = task.addSubTask(new Epic("First epic", "Some description"), new SubTask("First subtask", "Some description", TaskStatus.IN_PROGRESS));
+
+        task.getEpicById(firstEpic - 1);
+        task.getTaskById(firstTask - 1);
+        task.getTaskById(thirdTask - 1);
+        task.getSubTaskById(firstSubTask - 1);
+
+        assertNotNull(task.getHistory());
+        assertEquals(task.getHistory().size(), 4);
+
+        task.deleteSubTaskById(firstSubTask - 1);
+        task.deleteTaskById(firstTask - 1);
+
+        assertEquals(task.getHistory().size(), 2);
+
+        List<Task> tempArr = task.getHistory();
+
+        for (Task task : tempArr) {
+            System.out.println("id: " + task.getTaskId()
+                    + " | task name: " + task.getTaskName() + "\n");
+        }
     }
 }

@@ -8,7 +8,6 @@ public class InMemoryTaskManager implements TaskManager {
     private final Map<Integer, Epic> epicTasks = new HashMap<>();
     private final Map<Integer, SubTask> subTasks = new HashMap<>();
     private static int taskId = 0;
-    private final List<Task> lastSeenTasks = new ArrayList<>();
     private final HistoryManager historyManager = Managers.getDefaultHistory();
 
     @Override
@@ -77,36 +76,21 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task getTaskById(int id) {
-        if (lastSeenTasks.size() <= 10) {
-            lastSeenTasks.add(tasks.get(id));
-        } else {
-            lastSeenTasks.removeFirst();
-            lastSeenTasks.add(tasks.get(id));
-        }
+        historyManager.add(tasks.get(id));
 
         return tasks.get(id);
     }
 
     @Override
     public Epic getEpicById(int id) {
-        if (lastSeenTasks.size() <= 10) {
-            lastSeenTasks.add(tasks.get(id));
-        } else {
-            lastSeenTasks.removeFirst();
-            lastSeenTasks.add(tasks.get(id));
-        }
+        historyManager.add(epicTasks.get(id));
 
         return epicTasks.get(id);
     }
 
     @Override
     public SubTask getSubTaskById(int id) {
-        if (lastSeenTasks.size() <= 10) {
-            lastSeenTasks.add(tasks.get(id));
-        } else {
-            lastSeenTasks.removeFirst();
-            lastSeenTasks.add(tasks.get(id));
-        }
+        historyManager.add(subTasks.get(id));
 
         return subTasks.get(id);
     }
@@ -152,11 +136,13 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteTaskById(int id) {
+        historyManager.remove(tasks.get(id).getTaskId());
         tasks.remove(id);
     }
 
     @Override
     public void deleteEpicById(int id) {
+        historyManager.remove(epicTasks.get(id).getTaskId());
         ArrayList<Integer> tempArr = new ArrayList<>();
 
         for (Integer keys : subTasks.keySet()) {
@@ -174,6 +160,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteSubTaskById(int id) {
+        historyManager.remove(subTasks.get(id).getTaskId());
         Epic tempEpic = subTasks.get(id).getEpic();
 
         for (Integer epicKeys : epicTasks.keySet()) {
@@ -197,26 +184,26 @@ public class InMemoryTaskManager implements TaskManager {
             }
         }
 
-        for (int i = 0; i < tempArrSubTasks.size(); i++) {
-            if (tempArrSubTasks.get(i).getTaskStatus() == TaskStatus.IN_PROGRESS) {
+        for (SubTask tempArrSubTask : tempArrSubTasks) {
+            if (tempArrSubTask.getTaskStatus() == TaskStatus.IN_PROGRESS) {
                 for (Integer epicKeys : epicTasks.keySet()) {
-                    if (epicTasks.get(epicKeys).equals(tempArrSubTasks.get(i).getEpic())) {
+                    if (epicTasks.get(epicKeys).equals(tempArrSubTask.getEpic())) {
                         epicTasks.get(epicKeys).setTaskStatus(TaskStatus.IN_PROGRESS);
                         return;
                     }
                 }
 
                 return;
-            } else if (tempArrSubTasks.get(i).getTaskStatus() == TaskStatus.DONE) {
+            } else if (tempArrSubTask.getTaskStatus() == TaskStatus.DONE) {
                 for (Integer epicKeys : epicTasks.keySet()) {
-                    if (epicTasks.get(epicKeys).equals(tempArrSubTasks.get(i).getEpic())) {
+                    if (epicTasks.get(epicKeys).equals(tempArrSubTask.getEpic())) {
                         epicTasks.get(epicKeys).setTaskStatus(TaskStatus.DONE);
                         break;
                     }
                 }
             } else {
                 for (Integer epicKeys : epicTasks.keySet()) {
-                    if (epicTasks.get(epicKeys).equals(tempArrSubTasks.get(i).getEpic())) {
+                    if (epicTasks.get(epicKeys).equals(tempArrSubTask.getEpic())) {
                         epicTasks.get(epicKeys).setTaskStatus(TaskStatus.NEW);
                         break;
                     }
