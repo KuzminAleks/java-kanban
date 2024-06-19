@@ -1,3 +1,5 @@
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Task {
@@ -5,16 +7,16 @@ public class Task {
     private String description;
     private int id;
     private TaskStatus taskStatus;
+    private Duration duration;
+    private LocalDateTime startTime;
 
-    Task() {
-
-    }
-
-    Task(String newTaskName, String newDescription, TaskStatus newTaskStatus) {
+    Task(String newTaskName, String newDescription, TaskStatus newTaskStatus, Duration newDuration, LocalDateTime newStartTime) {
         taskName = newTaskName;
         description = newDescription;
         id = hashCode();
         taskStatus = newTaskStatus;
+        duration = newDuration;
+        startTime = newStartTime;
     }
 
     public String getTaskName() {
@@ -35,6 +37,26 @@ public class Task {
 
     public void setTaskStatus(TaskStatus newTaskStatus) {
         taskStatus = newTaskStatus;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
+    public LocalDateTime getEndTime() {
+        return startTime.plus(duration);
     }
 
     @Override

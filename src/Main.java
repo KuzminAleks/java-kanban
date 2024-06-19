@@ -5,9 +5,9 @@ public class Main {
 
 
         TaskManager taskManager = new InMemoryTaskManager();
-        taskManager.addTask(new Task("1 Task", "Some description", TaskStatus.NEW));
-        taskManager.addTask(new Task("2 Task", "Some description", TaskStatus.NEW));
-        taskManager.addTask(new Task("3 Task", "Some description", TaskStatus.NEW));
+//        taskManager.addTask(new Task("1 Task", "Some description", TaskStatus.NEW));
+//        taskManager.addTask(new Task("2 Task", "Some description", TaskStatus.NEW));
+//        taskManager.addTask(new Task("3 Task", "Some description", TaskStatus.NEW));
         //System.out.println(taskManager.getAllSimpleTasks());
         System.out.println(taskManager.getAllTasks());
 //        HashMap<Integer, Task> simpleTasksMap = taskManager.getSimpleTasksMap();
