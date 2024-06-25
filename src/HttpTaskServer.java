@@ -6,13 +6,13 @@ import java.net.InetSocketAddress;
 public class HttpTaskServer {
     private final TaskManager manager;
     private HttpServer httpServer;
-    private boolean isWorking = false;
 
     public HttpTaskServer(TaskManager manager) {
         this.manager = manager;
     }
 
     public static void main(String[] args) {
+
 
     }
 
@@ -25,7 +25,6 @@ public class HttpTaskServer {
             httpServer.start();
 
             System.out.println("Сервер запущен! Слушает 8080.");
-            isWorking = true;
         } catch (IOException e) {
             System.out.println("IOException при запуске сервера!");
         }
@@ -33,15 +32,5 @@ public class HttpTaskServer {
 
     public void stop() {
         httpServer.stop(0);
-    }
-
-    public void check() {
-
-        if (isWorking) {
-            System.out.println("Мы работаем!");
-        } else {
-            System.out.println("Мы не работаем(((");
-        }
-
     }
 }
