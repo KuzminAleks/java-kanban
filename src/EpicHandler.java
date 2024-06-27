@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class EpicHandler extends FormatAdapters implements HttpHandler {
-    final public TaskManager manager;
+    final TaskManager manager;
 
     final Gson gson = new GsonBuilder()
             .setPrettyPrinting()

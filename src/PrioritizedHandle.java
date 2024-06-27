@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import java.util.Set;
 
 public class PrioritizedHandle extends FormatAdapters implements HttpHandler {
-    final public TaskManager manager;
+    final TaskManager manager;
 
     final Gson gson = new GsonBuilder()
             .setPrettyPrinting()
