@@ -12,19 +12,21 @@ public class HttpTaskServer {
     }
 
     public static void main(String[] args) {
-
-
     }
 
     public void start() {
         try {
-            httpServer = HttpServer.create(new InetSocketAddress(8080), 0);
+            httpServer = HttpServer.create(new InetSocketAddress(803), 0);
 
             httpServer.createContext("/tasks", new TasksHandler(manager));
+            httpServer.createContext("/epics", new EpicHandler(manager));
+            httpServer.createContext("/subtasks", new SubTasksHandler(manager));
+            httpServer.createContext("/history", new HistoryHandle(manager));
+            httpServer.createContext("/prioritized", new PrioritizedHandle(manager));
 
             httpServer.start();
 
-            System.out.println("Сервер запущен! Слушает 8080.");
+            System.out.println("Сервер запущен! Слушает 803.");
         } catch (IOException e) {
             System.out.println("IOException при запуске сервера!");
         }
@@ -32,5 +34,7 @@ public class HttpTaskServer {
 
     public void stop() {
         httpServer.stop(0);
+
+        System.out.println("Сервер остановлен!");
     }
 }

@@ -118,45 +118,61 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void updateTask(Task task, int id) {
+    public boolean updateTask(Task task, int id) {
         if (!isIntersect(task)) {
             super.updateTask(task, id);
             save();
+            return true;
         }
+
+        return false;
     }
 
     @Override
-    public void updateEpicTask(Epic epic, int id) {
+    public boolean updateEpicTask(Epic epic, int id) {
         if (!isIntersect(epic)) {
             super.updateEpicTask(epic, id);
             save();
+
+            return true;
         }
+
+        return false;
     }
 
     @Override
-    public void updateSubTask(SubTask subTask, int id) {
+    public boolean updateSubTask(SubTask subTask, int id) {
         if (!isIntersect(subTask)) {
             super.updateSubTask(subTask, id);
             save();
+
+            return true;
         }
+
+        return false;
     }
 
     @Override
-    public void deleteTaskById(int id) {
-        super.deleteTaskById(id);
+    public boolean deleteTaskById(int id) {
+        boolean isRemoved = super.deleteTaskById(id);
         save();
+
+        return isRemoved;
     }
 
     @Override
-    public void deleteEpicById(int id) {
-        super.deleteEpicById(id);
+    public boolean deleteEpicById(int id) {
+        boolean isRemoved = super.deleteEpicById(id);
         save();
+        return isRemoved;
     }
 
     @Override
-    public void deleteSubTaskById(int id) {
-        super.deleteSubTaskById(id);
+    public boolean deleteSubTaskById(int id) {
+        boolean isRemoved = super.deleteSubTaskById(id);
         save();
+
+        return isRemoved;
     }
 
     public String toString(Task task) {
