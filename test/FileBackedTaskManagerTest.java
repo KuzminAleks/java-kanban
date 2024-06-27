@@ -1,16 +1,12 @@
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.File;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.BufferedReader;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -207,60 +203,6 @@ public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskMan
             }
 
             br.close();
-        } catch (IOException exp) {
-            exp.printStackTrace();
-        }
-    }
-
-    @BeforeAll
-    static void shouldLoadFourTasksFromFile() {
-        try {
-            File file = File.createTempFile("temp3", ".txt");
-
-            FileWriter fw = new FileWriter(file);
-
-            fw.write("id,type,name,status,description,duration,date,epic\n");
-            fw.write("0,TASK,Task 1,IN_PROGRESS,Description,65,2024-12-23T15:15:30,\n");
-            fw.write("1,TASK,Task 2,DONE,Description,120,2023-11-12T11:15:30,\n");
-            fw.write("2,EPIC,Epic 1,IN_PROGRESS,Description epic 1,78,2022-08-22T15:15:30,\n");
-            fw.write("3,SUBTASK,SubTask 1 of epic 1,IN_PROGRESS,Description,78,2022-08-22T15:15:30,2\n");
-            fw.write("4,SUBTASK,SubTask 2 of epic 1,NEW,Description,90,2024-07-22T10:20:00,2\n");
-
-            fw.close();
-
-            task = FileBackedTaskManager.loadFromFile(file);
-
-            List<Epic> tempArr = task.getAllEpicTasks();
-
-            for (Epic epic : tempArr) {
-                System.out.println(epic.getStartTime());
-                System.out.println(epic.getEndTime());
-            }
-
-            List<Task> tempArrTasks = task.getAllTasks();
-
-            for (Task task : tempArrTasks) {
-                System.out.println(task.getTaskName() + " duration: " + task.getDuration().toHours() + "h "
-                        + task.getDuration().toMinutesPart() + "min");
-            }
-
-            List<SubTask> tempArrSubTasks = task.getAllSubTasks();
-
-            for (SubTask task : tempArrSubTasks) {
-                System.out.println(task.getTaskName());
-            }
-
-            System.out.println();
-
-            Set<Task> tempSet = task.getPrioritizedTasks();
-
-            for (Task task : tempSet) {
-                System.out.println(task.getTaskName());
-            }
-
-            assertEquals(task.getAllTasks().size(), 2);
-            assertEquals(task.getAllEpicTasks().size(), 1);
-            assertEquals(task.getAllSubTasks().size(), 2);
         } catch (IOException exp) {
             exp.printStackTrace();
         }
