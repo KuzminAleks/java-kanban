@@ -57,7 +57,7 @@ public class HttpTaskServerTest extends FormatAdapters {
         manager.addTask(new Task("2 Task", "Some description 2", TaskStatus.DONE,
                 Duration.ofMinutes(60), LocalDateTime.of(2024, 1, 10, 15, 23, 45)));
 
-        URI url = URI.create("http://localhost:803/tasks");
+        URI url = URI.create("http://localhost:8080/tasks");
 
         HttpRequest request = HttpRequest.newBuilder()
                 .GET()
@@ -91,7 +91,7 @@ public class HttpTaskServerTest extends FormatAdapters {
         int id = manager.addTask(task);
 
 
-        URI url = URI.create("http://localhost:803/tasks/" + (id - 1));
+        URI url = URI.create("http://localhost:8080/tasks/" + (id - 1));
 
         HttpRequest request = HttpRequest.newBuilder()
                 .GET()
@@ -119,7 +119,7 @@ public class HttpTaskServerTest extends FormatAdapters {
     void shouldReturnCode404GetTask() throws IOException, InterruptedException {
         manager.addTask(new Task("1 Task", "Some description", TaskStatus.NEW, Duration.ofMinutes(30), LocalDateTime.now()));
 
-        URI url = URI.create("http://localhost:803/tasks/21232");
+        URI url = URI.create("http://localhost:8080/tasks/21232");
 
         HttpRequest request = HttpRequest.newBuilder()
                 .GET()
@@ -138,7 +138,7 @@ public class HttpTaskServerTest extends FormatAdapters {
 
     @Test
     void addTask() throws IOException, InterruptedException {
-        URI url = URI.create("http://localhost:803/tasks");
+        URI url = URI.create("http://localhost:8080/tasks");
 
         String newTask = gson.toJson(new Task("1 Task", "Some description", TaskStatus.NEW, Duration.ofMinutes(30), LocalDateTime.now()));
 
@@ -160,7 +160,7 @@ public class HttpTaskServerTest extends FormatAdapters {
 
     @Test
     void shouldReturn406AddTask() throws IOException, InterruptedException {
-        URI url = URI.create("http://localhost:803/tasks");
+        URI url = URI.create("http://localhost:8080/tasks");
 
         manager.addTask(new Task("1 Task", "Some description", TaskStatus.NEW, Duration.ofMinutes(30), LocalDateTime.now()));
 
@@ -183,7 +183,7 @@ public class HttpTaskServerTest extends FormatAdapters {
 
     @Test
     void updateTask() throws IOException, InterruptedException {
-        URI url = URI.create("http://localhost:803/tasks");
+        URI url = URI.create("http://localhost:8080/tasks");
 
         int id = manager.addTask(new Task("1 Task", "Some description", TaskStatus.NEW, Duration.ofMinutes(30), LocalDateTime.now())) - 1;
 
@@ -210,7 +210,7 @@ public class HttpTaskServerTest extends FormatAdapters {
 
     @Test
     void shouldReturn406UpdateTask() throws IOException, InterruptedException {
-        URI url = URI.create("http://localhost:803/tasks");
+        URI url = URI.create("http://localhost:8080/tasks");
 
         int id = manager.addTask(new Task("1 Task", "Some description", TaskStatus.NEW, Duration.ofMinutes(30), LocalDateTime.now())) - 1;
 
@@ -237,7 +237,7 @@ public class HttpTaskServerTest extends FormatAdapters {
     void deleteTask() throws IOException, InterruptedException {
         int id = manager.addTask(new Task("1 Task", "Some description", TaskStatus.NEW, Duration.ofMinutes(30), LocalDateTime.now())) - 1;
 
-        URI url = URI.create("http://localhost:803/tasks/" + id);
+        URI url = URI.create("http://localhost:8080/tasks/" + id);
 
         HttpRequest request = HttpRequest.newBuilder()
                 .DELETE()
@@ -258,7 +258,7 @@ public class HttpTaskServerTest extends FormatAdapters {
     void shouldReturn404DeleteTask() throws IOException, InterruptedException {
         manager.addTask(new Task("1 Task", "Some description", TaskStatus.NEW, Duration.ofMinutes(30), LocalDateTime.now()));
 
-        URI url = URI.create("http://localhost:803/tasks/741258");
+        URI url = URI.create("http://localhost:8080/tasks/741258");
 
         HttpRequest request = HttpRequest.newBuilder()
                 .DELETE()
@@ -280,7 +280,7 @@ public class HttpTaskServerTest extends FormatAdapters {
         manager.addEpicTask(new Epic("Epic 1", "Some description 1"));
         manager.addEpicTask(new Epic("Epic 2", "Some description 2"));
 
-        URI url = URI.create("http://localhost:803/epics");
+        URI url = URI.create("http://localhost:8080/epics");
 
         HttpRequest request = HttpRequest.newBuilder()
                 .GET()
@@ -314,7 +314,7 @@ public class HttpTaskServerTest extends FormatAdapters {
     void getEpicById() throws IOException, InterruptedException {
         int id = manager.addEpicTask(new Epic("Epic 1", "Some description 1")) - 1;
 
-        URI url = URI.create("http://localhost:803/epics/" + id);
+        URI url = URI.create("http://localhost:8080/epics/" + id);
 
         HttpRequest request = HttpRequest.newBuilder()
                 .GET()
@@ -342,7 +342,7 @@ public class HttpTaskServerTest extends FormatAdapters {
     void shouldReturnCode404GetEpic() throws IOException, InterruptedException {
         manager.addEpicTask(new Epic("Epic 1", "Some description 1"));
 
-        URI url = URI.create("http://localhost:803/epics/21232");
+        URI url = URI.create("http://localhost:8080/epics/21232");
 
         HttpRequest request = HttpRequest.newBuilder()
                 .GET()
@@ -361,7 +361,7 @@ public class HttpTaskServerTest extends FormatAdapters {
 
     @Test
     void addEpic() throws IOException, InterruptedException {
-        URI url = URI.create("http://localhost:803/epics");
+        URI url = URI.create("http://localhost:8080/epics");
 
         String newEpic = gson.toJson(new Epic("Epic 1", "Some description 1"));
 
@@ -384,7 +384,7 @@ public class HttpTaskServerTest extends FormatAdapters {
     void updateEpic() throws IOException, InterruptedException {
         int id = manager.addEpicTask(new Epic("Epic 1", "Some description 1")) - 1;
 
-        URI url = URI.create("http://localhost:803/epics/" + id);
+        URI url = URI.create("http://localhost:8080/epics/" + id);
 
         String newEpic = gson.toJson(new Epic("Epic UPDATED", "Some description UPDATED"));
 
@@ -411,7 +411,7 @@ public class HttpTaskServerTest extends FormatAdapters {
     void deleteEpic() throws IOException, InterruptedException {
         int id = manager.addEpicTask(new Epic("Epic 1", "Some description 1")) - 1;
 
-        URI url = URI.create("http://localhost:803/epics/" + id);
+        URI url = URI.create("http://localhost:8080/epics/" + id);
 
         HttpRequest request = HttpRequest.newBuilder()
                 .DELETE()
@@ -432,7 +432,7 @@ public class HttpTaskServerTest extends FormatAdapters {
     void shouldReturn404DeleteEpic() throws IOException, InterruptedException {
         manager.addEpicTask(new Epic("Epic 1", "Some description 1"));
 
-        URI url = URI.create("http://localhost:803/epics/7001");
+        URI url = URI.create("http://localhost:8080/epics/7001");
 
         HttpRequest request = HttpRequest.newBuilder()
                 .DELETE()
@@ -462,7 +462,7 @@ public class HttpTaskServerTest extends FormatAdapters {
                         Duration.ofMinutes(12), LocalDateTime.now())
         );
 
-        URI url = URI.create("http://localhost:803/epics/" + id + "/subtasks");
+        URI url = URI.create("http://localhost:8080/epics/" + id + "/subtasks");
 
         HttpRequest request = HttpRequest.newBuilder()
                 .GET()
@@ -509,7 +509,7 @@ public class HttpTaskServerTest extends FormatAdapters {
                         Duration.ofMinutes(12), LocalDateTime.now())
         );
 
-        URI url = URI.create("http://localhost:803/subtasks");
+        URI url = URI.create("http://localhost:8080/subtasks");
 
         HttpRequest request = HttpRequest.newBuilder()
                 .GET()
@@ -540,7 +540,7 @@ public class HttpTaskServerTest extends FormatAdapters {
                         Duration.ofMinutes(12), LocalDateTime.of(2024, 1, 1, 13, 0))
         ) - 1;
 
-        URI url = URI.create("http://localhost:803/subtasks/" + id);
+        URI url = URI.create("http://localhost:8080/subtasks/" + id);
 
         HttpRequest request = HttpRequest.newBuilder()
                 .GET()
@@ -568,7 +568,7 @@ public class HttpTaskServerTest extends FormatAdapters {
         String newSubTask = "{\"epicName\":\"Epic 1\",\"epicDescription\":\"Some description 1\"," + gson.toJson(new SubTask("SubTask 1 of epic 1", "Description", TaskStatus.NEW,
                 Duration.ofMinutes(12), LocalDateTime.of(2024, 1, 1, 13, 0))).substring(1);
 
-        URI url = URI.create("http://localhost:803/subtasks");
+        URI url = URI.create("http://localhost:8080/subtasks");
 
         HttpRequest request = HttpRequest.newBuilder()
                 .POST(HttpRequest.BodyPublishers.ofString(newSubTask))
@@ -598,7 +598,7 @@ public class HttpTaskServerTest extends FormatAdapters {
         String newSubTask = "{\"idSubTask\":" + id + "," + gson.toJson(new SubTask("SubTask 1 of epic 1 UPDATED", "Description UPDATED", TaskStatus.DONE,
                 Duration.ofMinutes(12), LocalDateTime.of(2023, 12, 31, 13, 0))).substring(1);
 
-        URI url = URI.create("http://localhost:803/subtasks");
+        URI url = URI.create("http://localhost:8080/subtasks");
 
         HttpRequest request = HttpRequest.newBuilder()
                 .POST(HttpRequest.BodyPublishers.ofString(newSubTask))
@@ -629,7 +629,7 @@ public class HttpTaskServerTest extends FormatAdapters {
         ) - 1;
 
 
-        URI url = URI.create("http://localhost:803/subtasks/" + id);
+        URI url = URI.create("http://localhost:8080/subtasks/" + id);
 
         HttpRequest request = HttpRequest.newBuilder()
                 .DELETE()
@@ -655,7 +655,7 @@ public class HttpTaskServerTest extends FormatAdapters {
         manager.getTaskById(id2);
         manager.getTaskById(id1);
 
-        URI url = URI.create("http://localhost:803/history");
+        URI url = URI.create("http://localhost:8080/history");
 
         HttpRequest request = HttpRequest.newBuilder()
                 .GET()
@@ -681,7 +681,7 @@ public class HttpTaskServerTest extends FormatAdapters {
         manager.addTask(new Task("Task 2", "Description", TaskStatus.DONE,
                 Duration.ofMinutes(35), LocalDateTime.of(2024, 6, 14, 15, 0)));
 
-        URI url = URI.create("http://localhost:803/prioritized");
+        URI url = URI.create("http://localhost:8080/prioritized");
 
         HttpRequest request = HttpRequest.newBuilder()
                 .GET()

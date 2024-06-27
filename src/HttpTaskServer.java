@@ -16,7 +16,7 @@ public class HttpTaskServer {
 
     public void start() {
         try {
-            httpServer = HttpServer.create(new InetSocketAddress(803), 0);
+            httpServer = HttpServer.create(new InetSocketAddress(8080), 0);
 
             httpServer.createContext("/tasks", new TasksHandler(manager));
             httpServer.createContext("/epics", new EpicHandler(manager));
@@ -26,7 +26,7 @@ public class HttpTaskServer {
 
             httpServer.start();
 
-            System.out.println("Сервер запущен! Слушает 803.");
+            System.out.println("Сервер запущен! Слушает 8080.");
         } catch (IOException e) {
             System.out.println("IOException при запуске сервера!");
         }
