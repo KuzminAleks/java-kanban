@@ -613,9 +613,10 @@ public class HttpTaskServerTest extends FormatAdapters {
 
         assertEquals(201, response.statusCode());
 
-        assertEquals(new SubTask("SubTask 1 of epic 1 UPDATED", "Description UPDATED", TaskStatus.DONE,
-                Duration.ofMinutes(12), LocalDateTime.of(2023, 12, 31, 13, 0)),
-                manager.getSubTaskById(id));
+        assertEquals(new SubTask("SubTask 1 of epic 1 UPDATED", "Description UPDATED",
+                        TaskStatus.DONE, Duration.ofMinutes(12),
+                        LocalDateTime.of(2023, 12, 31, 13, 0)),
+                        manager.getSubTaskById(id));
     }
 
     @Test
