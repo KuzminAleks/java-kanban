@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class SubTasksHandler extends FormatAdapters implements HttpHandler {
-    final private TaskManager manager;
+    public final TaskManager manager;
 
     final Gson gson = new GsonBuilder()
             .setPrettyPrinting()
