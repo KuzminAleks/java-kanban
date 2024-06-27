@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class HistoryHandle extends FormatAdapters implements HttpHandler {
-    final protected TaskManager manager;
+    final TaskManager manager;
 
     final Gson gson = new GsonBuilder()
             .setPrettyPrinting()
