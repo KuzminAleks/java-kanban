@@ -1,16 +1,16 @@
 public class Main {
 
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         System.out.println("Поехали!");
 
 
-        TaskManager taskManager = new InMemoryTaskManager();
-//        taskManager.addTask(new Task("1 Task", "Some description", TaskStatus.NEW));
-//        taskManager.addTask(new Task("2 Task", "Some description", TaskStatus.NEW));
-//        taskManager.addTask(new Task("3 Task", "Some description", TaskStatus.NEW));
+        Managers.TaskManager taskManager = new Managers.InMemoryTaskManager();
+//        taskManager.addTask(new Tasks.Task("1 Tasks.Task", "Some description", TasksStatus.TaskStatus.NEW));
+//        taskManager.addTask(new Tasks.Task("2 Tasks.Task", "Some description", TasksStatus.TaskStatus.NEW));
+//        taskManager.addTask(new Tasks.Task("3 Tasks.Task", "Some description", TasksStatus.TaskStatus.NEW));
         //System.out.println(taskManager.getAllSimpleTasks());
         System.out.println(taskManager.getAllTasks());
-//        HashMap<Integer, Task> simpleTasksMap = taskManager.getSimpleTasksMap();
+//        HashMap<Integer, Tasks.Task> simpleTasksMap = taskManager.getSimpleTasksMap();
 //        for (Integer key : simpleTasksMap.keySet()) {
 //            System.out.println(taskManager.getSimpleTaskById(key));
 //        }
@@ -21,5 +21,5 @@ public class Main {
 //        }
 
         //System.out.println(taskManager.getSimpleTaskById());
-    }
+    }*/
 }

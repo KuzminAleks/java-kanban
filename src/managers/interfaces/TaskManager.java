@@ -1,3 +1,9 @@
+package managers.interfaces;
+
+import tasks.epic.Epic;
+import tasks.subtask.SubTask;
+import tasks.task.Task;
+
 import java.util.List;
 import java.util.Set;
 
@@ -28,17 +34,17 @@ public interface TaskManager {
 
     List<SubTask> getSubTaskOfEpic(Epic epic);
 
-    void updateTask(Task task, int id);
+    boolean updateTask(Task task, int id);
 
-    void updateEpicTask(Epic epic, int id);
+    boolean updateEpicTask(Epic epic, int id);
 
-    void updateSubTask(SubTask subTask, int id);
+    boolean updateSubTask(SubTask subTask, int id);
 
-    void deleteTaskById(int id);
+    boolean deleteTaskById(int id);
 
-    void deleteEpicById(int id);
+    boolean deleteEpicById(int id);
 
-    void deleteSubTaskById(int id);
+    boolean deleteSubTaskById(int id);
 
     void checkEpicStatus(Epic epic);
 

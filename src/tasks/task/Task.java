@@ -1,16 +1,19 @@
+package tasks.task;
+
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Objects;
+import task.enums.TaskStatus;
 
 public class Task {
-    private String taskName;
-    private String description;
-    private int id;
+    private final String taskName;
+    private final String description;
+    private final int id;
     private TaskStatus taskStatus;
     private Duration duration;
     private LocalDateTime startTime;
 
-    Task(String newTaskName, String newDescription, TaskStatus newTaskStatus, Duration newDuration, LocalDateTime newStartTime) {
+    public Task(String newTaskName, String newDescription, TaskStatus newTaskStatus, Duration newDuration, LocalDateTime newStartTime) {
         taskName = newTaskName;
         description = newDescription;
         id = hashCode();

@@ -1,7 +1,13 @@
+package managers.inmemory;
+
 import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
+
+import task.node.Node;
+import tasks.task.Task;
+import managers.interfaces.HistoryManager;
 
 public class InMemoryHistoryManager implements HistoryManager {
     private final Map<Integer, Node<Task>> history = new HashMap<>();

@@ -1,3 +1,5 @@
+package managers.file.backed;
+
 import java.io.IOException;
 import java.io.FileReader;
 import java.io.File;
@@ -7,6 +9,13 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Set;
+import tasks.task.Task;
+import tasks.epic.Epic;
+import tasks.subtask.SubTask;
+import managers.inmemory.InMemoryTaskManager;
+import task.enums.TaskStatus;
+import task.enums.TaskType;
+import save.exception.ManagerSaveException;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
     private final File dataFile;
@@ -118,45 +127,61 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void updateTask(Task task, int id) {
+    public boolean updateTask(Task task, int id) {
         if (!isIntersect(task)) {
             super.updateTask(task, id);
             save();
+            return true;
         }
+
+        return false;
     }
 
     @Override
-    public void updateEpicTask(Epic epic, int id) {
+    public boolean updateEpicTask(Epic epic, int id) {
         if (!isIntersect(epic)) {
             super.updateEpicTask(epic, id);
             save();
+
+            return true;
         }
+
+        return false;
     }
 
     @Override
-    public void updateSubTask(SubTask subTask, int id) {
+    public boolean updateSubTask(SubTask subTask, int id) {
         if (!isIntersect(subTask)) {
             super.updateSubTask(subTask, id);
             save();
+
+            return true;
         }
+
+        return false;
     }
 
     @Override
-    public void deleteTaskById(int id) {
-        super.deleteTaskById(id);
+    public boolean deleteTaskById(int id) {
+        boolean isRemoved = super.deleteTaskById(id);
         save();
+
+        return isRemoved;
     }
 
     @Override
-    public void deleteEpicById(int id) {
-        super.deleteEpicById(id);
+    public boolean deleteEpicById(int id) {
+        boolean isRemoved = super.deleteEpicById(id);
         save();
+        return isRemoved;
     }
 
     @Override
-    public void deleteSubTaskById(int id) {
-        super.deleteSubTaskById(id);
+    public boolean deleteSubTaskById(int id) {
+        boolean isRemoved = super.deleteSubTaskById(id);
         save();
+
+        return isRemoved;
     }
 
     public String toString(Task task) {

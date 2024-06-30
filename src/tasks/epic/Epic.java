@@ -1,13 +1,18 @@
+package tasks.epic;
+
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import task.enums.TaskStatus;
+import tasks.subtask.SubTask;
+import tasks.task.Task;
 
 public class Epic extends Task {
     private final List<SubTask> subTasks;
     private LocalDateTime endTime;
 
-    Epic(String newEpicName, String newDescription) {
+    public Epic(String newEpicName, String newDescription) {
         super(newEpicName, newDescription, TaskStatus.NEW, Duration.ZERO, LocalDateTime.MIN);
         endTime = LocalDateTime.MIN;
         subTasks = new ArrayList<>();

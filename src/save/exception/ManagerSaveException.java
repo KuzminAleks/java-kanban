@@ -1,9 +1,11 @@
+package save.exception;
+
 public class ManagerSaveException extends RuntimeException {
-    ManagerSaveException() {
+    public ManagerSaveException() {
 
     }
 
-    ManagerSaveException(String par) {
+    public ManagerSaveException(String par) {
         System.out.println(par);
     }
 }
