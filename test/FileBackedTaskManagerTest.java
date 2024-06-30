@@ -1,3 +1,10 @@
+import Exceptions.ManagerSaveException;
+import Managers.FileBackedTaskManager;
+import Managers.TaskManager;
+import Tasks.Epic;
+import Tasks.SubTask;
+import Tasks.Task;
+import Enums.TaskStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -176,18 +183,18 @@ public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskMan
             File file = File.createTempFile("temp2", ".txt");
             task = FileBackedTaskManager.loadFromFile(file);
 
-            task.addTask(new Task("Task 1", "Description", TaskStatus.IN_PROGRESS, Duration.ofMinutes(20), LocalDateTime.now()));
+            task.addTask(new Task("Tasks.Task 1", "Description", TaskStatus.IN_PROGRESS, Duration.ofMinutes(20), LocalDateTime.now()));
 
-            task.addEpicTask(new Epic("Epic 1", "Description epic 1"));
-            task.addSubTask(new Epic("Epic 1", "Description epic 1"), new SubTask("SubTask 1 of epic 1", "Description", TaskStatus.NEW, Duration.ofMinutes(12), LocalDateTime.of(2024,1,1,13,0)));
-            task.addSubTask(new Epic("Epic 1", "Description epic 1"), new SubTask("SubTask 2 of epic 1", "Description", TaskStatus.IN_PROGRESS, Duration.ofMinutes(65), LocalDateTime.of(2024,6,13,15,0)));
-            task.addSubTask(new Epic("Epic 1", "Description epic 1"), new SubTask("SubTask 3 of epic 1", "Description", TaskStatus.DONE, Duration.ofMinutes(129), LocalDateTime.of(2024,7,13,15,0)));
+            task.addEpicTask(new Epic("Tasks.Epic 1", "Description epic 1"));
+            task.addSubTask(new Epic("Tasks.Epic 1", "Description epic 1"), new SubTask("Tasks.SubTask 1 of epic 1", "Description", TaskStatus.NEW, Duration.ofMinutes(12), LocalDateTime.of(2024,1,1,13,0)));
+            task.addSubTask(new Epic("Tasks.Epic 1", "Description epic 1"), new SubTask("Tasks.SubTask 2 of epic 1", "Description", TaskStatus.IN_PROGRESS, Duration.ofMinutes(65), LocalDateTime.of(2024,6,13,15,0)));
+            task.addSubTask(new Epic("Tasks.Epic 1", "Description epic 1"), new SubTask("Tasks.SubTask 3 of epic 1", "Description", TaskStatus.DONE, Duration.ofMinutes(129), LocalDateTime.of(2024,7,13,15,0)));
 
-            task.addEpicTask(new Epic("Epic 2", "Description epic 2"));
-            task.addSubTask(new Epic("Epic 2", "Description epic 2"), new SubTask("SubTask 1 of epic 2", "Description", TaskStatus.DONE, Duration.ofMinutes(20), LocalDateTime.of(2024,12,13,15,0)));
-            task.addSubTask(new Epic("Epic 2", "Description epic 2"), new SubTask("SubTask 2 of epic 2", "Description", TaskStatus.DONE, Duration.ofMinutes(230), LocalDateTime.of(2024,11,13,15,0)));
+            task.addEpicTask(new Epic("Tasks.Epic 2", "Description epic 2"));
+            task.addSubTask(new Epic("Tasks.Epic 2", "Description epic 2"), new SubTask("Tasks.SubTask 1 of epic 2", "Description", TaskStatus.DONE, Duration.ofMinutes(20), LocalDateTime.of(2024,12,13,15,0)));
+            task.addSubTask(new Epic("Tasks.Epic 2", "Description epic 2"), new SubTask("Tasks.SubTask 2 of epic 2", "Description", TaskStatus.DONE, Duration.ofMinutes(230), LocalDateTime.of(2024,11,13,15,0)));
 
-            task.addTask(new Task("Task 2", "Description", TaskStatus.DONE, Duration.ofMinutes(35), LocalDateTime.of(2024,6,14,15,0)));
+            task.addTask(new Task("Tasks.Task 2", "Description", TaskStatus.DONE, Duration.ofMinutes(35), LocalDateTime.of(2024,6,14,15,0)));
 
             assertEquals(task.getAllTasks().size(), 2);
             assertEquals(task.getAllEpicTasks().size(), 2);

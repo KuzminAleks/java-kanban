@@ -1,3 +1,11 @@
+import FormatAdapters.FormatAdapters;
+import HttpServer.HttpTaskServer;
+import Managers.InMemoryTaskManager;
+import Managers.TaskManager;
+import Tasks.Epic;
+import Tasks.SubTask;
+import Tasks.Task;
+import Enums.TaskStatus;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonIOException;
@@ -53,8 +61,8 @@ public class HttpTaskServerTest extends FormatAdapters {
 
     @Test
     void getTasks() throws IOException, InterruptedException {
-        manager.addTask(new Task("1 Task", "Some description", TaskStatus.NEW, Duration.ofMinutes(30), LocalDateTime.now()));
-        manager.addTask(new Task("2 Task", "Some description 2", TaskStatus.DONE,
+        manager.addTask(new Task("1 Tasks.Task", "Some description", TaskStatus.NEW, Duration.ofMinutes(30), LocalDateTime.now()));
+        manager.addTask(new Task("2 Tasks.Task", "Some description 2", TaskStatus.DONE,
                 Duration.ofMinutes(60), LocalDateTime.of(2024, 1, 10, 15, 23, 45)));
 
         URI url = URI.create("http://localhost:8080/tasks");
@@ -87,7 +95,7 @@ public class HttpTaskServerTest extends FormatAdapters {
 
     @Test
     void getTaskById() throws IOException, InterruptedException {
-        Task task = new Task("1 Task", "Some description", TaskStatus.NEW, Duration.ofMinutes(30), LocalDateTime.now());
+        Task task = new Task("1 Tasks.Task", "Some description", TaskStatus.NEW, Duration.ofMinutes(30), LocalDateTime.now());
         int id = manager.addTask(task);
 
 
@@ -109,7 +117,7 @@ public class HttpTaskServerTest extends FormatAdapters {
         try {
             Task responseTask = gson.fromJson(response.body(), Task.class);
 
-            assertEquals(new Task("1 Task", "Some description", TaskStatus.NEW, Duration.ofMinutes(30), LocalDateTime.now()), responseTask);
+            assertEquals(new Task("1 Tasks.Task", "Some description", TaskStatus.NEW, Duration.ofMinutes(30), LocalDateTime.now()), responseTask);
         } catch (JsonIOException e) {
             e.printStackTrace();
         }
@@ -117,7 +125,7 @@ public class HttpTaskServerTest extends FormatAdapters {
 
     @Test
     void shouldReturnCode404GetTask() throws IOException, InterruptedException {
-        manager.addTask(new Task("1 Task", "Some description", TaskStatus.NEW, Duration.ofMinutes(30), LocalDateTime.now()));
+        manager.addTask(new Task("1 Tasks.Task", "Some description", TaskStatus.NEW, Duration.ofMinutes(30), LocalDateTime.now()));
 
         URI url = URI.create("http://localhost:8080/tasks/21232");
 
@@ -140,7 +148,7 @@ public class HttpTaskServerTest extends FormatAdapters {
     void addTask() throws IOException, InterruptedException {
         URI url = URI.create("http://localhost:8080/tasks");
 
-        String newTask = gson.toJson(new Task("1 Task", "Some description", TaskStatus.NEW, Duration.ofMinutes(30), LocalDateTime.now()));
+        String newTask = gson.toJson(new Task("1 Tasks.Task", "Some description", TaskStatus.NEW, Duration.ofMinutes(30), LocalDateTime.now()));
 
         HttpRequest request = HttpRequest.newBuilder()
                 .POST(HttpRequest.BodyPublishers.ofString(newTask))
@@ -154,7 +162,7 @@ public class HttpTaskServerTest extends FormatAdapters {
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
         assertEquals(201, response.statusCode());
-        assertEquals(new Task("1 Task", "Some description", TaskStatus.NEW,
+        assertEquals(new Task("1 Tasks.Task", "Some description", TaskStatus.NEW,
                 Duration.ofMinutes(30), LocalDateTime.now()), manager.getAllTasks().getFirst());
     }
 
@@ -162,9 +170,9 @@ public class HttpTaskServerTest extends FormatAdapters {
     void shouldReturn406AddTask() throws IOException, InterruptedException {
         URI url = URI.create("http://localhost:8080/tasks");
 
-        manager.addTask(new Task("1 Task", "Some description", TaskStatus.NEW, Duration.ofMinutes(30), LocalDateTime.now()));
+        manager.addTask(new Task("1 Tasks.Task", "Some description", TaskStatus.NEW, Duration.ofMinutes(30), LocalDateTime.now()));
 
-        String newTask = gson.toJson(new Task("1 Task", "Some description", TaskStatus.NEW, Duration.ofMinutes(30), LocalDateTime.now()));
+        String newTask = gson.toJson(new Task("1 Tasks.Task", "Some description", TaskStatus.NEW, Duration.ofMinutes(30), LocalDateTime.now()));
 
         HttpRequest request = HttpRequest.newBuilder()
                 .POST(HttpRequest.BodyPublishers.ofString(newTask))
@@ -185,9 +193,9 @@ public class HttpTaskServerTest extends FormatAdapters {
     void updateTask() throws IOException, InterruptedException {
         URI url = URI.create("http://localhost:8080/tasks");
 
-        int id = manager.addTask(new Task("1 Task", "Some description", TaskStatus.NEW, Duration.ofMinutes(30), LocalDateTime.now())) - 1;
+        int id = manager.addTask(new Task("1 Tasks.Task", "Some description", TaskStatus.NEW, Duration.ofMinutes(30), LocalDateTime.now())) - 1;
 
-        String newTask = gson.toJson(new Task("Updated Task", "Some new description",
+        String newTask = gson.toJson(new Task("Updated Tasks.Task", "Some new description",
                 TaskStatus.DONE, Duration.ofMinutes(70), LocalDateTime.of(2023, 12, 5, 14, 32, 33)));
 
         String newTaskWithId = "{\"idTask\":" + id + "," + newTask.substring(1);
@@ -204,7 +212,7 @@ public class HttpTaskServerTest extends FormatAdapters {
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
         assertEquals(201, response.statusCode());
-        assertEquals(new Task("Updated Task", "Some new description",
+        assertEquals(new Task("Updated Tasks.Task", "Some new description",
                 TaskStatus.DONE, Duration.ofMinutes(70), LocalDateTime.of(2023, 12, 5, 14, 32, 33)), manager.getTaskById(id));
     }
 
@@ -212,9 +220,9 @@ public class HttpTaskServerTest extends FormatAdapters {
     void shouldReturn406UpdateTask() throws IOException, InterruptedException {
         URI url = URI.create("http://localhost:8080/tasks");
 
-        int id = manager.addTask(new Task("1 Task", "Some description", TaskStatus.NEW, Duration.ofMinutes(30), LocalDateTime.now())) - 1;
+        int id = manager.addTask(new Task("1 Tasks.Task", "Some description", TaskStatus.NEW, Duration.ofMinutes(30), LocalDateTime.now())) - 1;
 
-        String newTask = gson.toJson(new Task("1 Task", "Some description", TaskStatus.NEW, Duration.ofMinutes(30), LocalDateTime.now()));
+        String newTask = gson.toJson(new Task("1 Tasks.Task", "Some description", TaskStatus.NEW, Duration.ofMinutes(30), LocalDateTime.now()));
 
         String newTaskWithId = "{\"idTask\":" + id + "," + newTask.substring(1);
 
@@ -235,7 +243,7 @@ public class HttpTaskServerTest extends FormatAdapters {
 
     @Test
     void deleteTask() throws IOException, InterruptedException {
-        int id = manager.addTask(new Task("1 Task", "Some description", TaskStatus.NEW, Duration.ofMinutes(30), LocalDateTime.now())) - 1;
+        int id = manager.addTask(new Task("1 Tasks.Task", "Some description", TaskStatus.NEW, Duration.ofMinutes(30), LocalDateTime.now())) - 1;
 
         URI url = URI.create("http://localhost:8080/tasks/" + id);
 
@@ -256,7 +264,7 @@ public class HttpTaskServerTest extends FormatAdapters {
 
     @Test
     void shouldReturn404DeleteTask() throws IOException, InterruptedException {
-        manager.addTask(new Task("1 Task", "Some description", TaskStatus.NEW, Duration.ofMinutes(30), LocalDateTime.now()));
+        manager.addTask(new Task("1 Tasks.Task", "Some description", TaskStatus.NEW, Duration.ofMinutes(30), LocalDateTime.now()));
 
         URI url = URI.create("http://localhost:8080/tasks/741258");
 
@@ -277,8 +285,8 @@ public class HttpTaskServerTest extends FormatAdapters {
 
     @Test
     void getAllEpic() throws IOException, InterruptedException {
-        manager.addEpicTask(new Epic("Epic 1", "Some description 1"));
-        manager.addEpicTask(new Epic("Epic 2", "Some description 2"));
+        manager.addEpicTask(new Epic("Tasks.Epic 1", "Some description 1"));
+        manager.addEpicTask(new Epic("Tasks.Epic 2", "Some description 2"));
 
         URI url = URI.create("http://localhost:8080/epics");
 
@@ -312,7 +320,7 @@ public class HttpTaskServerTest extends FormatAdapters {
 
     @Test
     void getEpicById() throws IOException, InterruptedException {
-        int id = manager.addEpicTask(new Epic("Epic 1", "Some description 1")) - 1;
+        int id = manager.addEpicTask(new Epic("Tasks.Epic 1", "Some description 1")) - 1;
 
         URI url = URI.create("http://localhost:8080/epics/" + id);
 
@@ -332,7 +340,7 @@ public class HttpTaskServerTest extends FormatAdapters {
         try {
             Epic responseEpic = gson.fromJson(response.body(), Epic.class);
 
-            assertEquals(new Epic("Epic 1", "Some description 1"), responseEpic);
+            assertEquals(new Epic("Tasks.Epic 1", "Some description 1"), responseEpic);
         } catch (JsonIOException e) {
             e.printStackTrace();
         }
@@ -340,7 +348,7 @@ public class HttpTaskServerTest extends FormatAdapters {
 
     @Test
     void shouldReturnCode404GetEpic() throws IOException, InterruptedException {
-        manager.addEpicTask(new Epic("Epic 1", "Some description 1"));
+        manager.addEpicTask(new Epic("Tasks.Epic 1", "Some description 1"));
 
         URI url = URI.create("http://localhost:8080/epics/21232");
 
@@ -363,7 +371,7 @@ public class HttpTaskServerTest extends FormatAdapters {
     void addEpic() throws IOException, InterruptedException {
         URI url = URI.create("http://localhost:8080/epics");
 
-        String newEpic = gson.toJson(new Epic("Epic 1", "Some description 1"));
+        String newEpic = gson.toJson(new Epic("Tasks.Epic 1", "Some description 1"));
 
         HttpRequest request = HttpRequest.newBuilder()
                 .POST(HttpRequest.BodyPublishers.ofString(newEpic))
@@ -377,16 +385,16 @@ public class HttpTaskServerTest extends FormatAdapters {
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
         assertEquals(201, response.statusCode());
-        assertEquals(new Epic("Epic 1", "Some description 1"), manager.getAllEpicTasks().getFirst());
+        assertEquals(new Epic("Tasks.Epic 1", "Some description 1"), manager.getAllEpicTasks().getFirst());
     }
 
     @Test
     void updateEpic() throws IOException, InterruptedException {
-        int id = manager.addEpicTask(new Epic("Epic 1", "Some description 1")) - 1;
+        int id = manager.addEpicTask(new Epic("Tasks.Epic 1", "Some description 1")) - 1;
 
         URI url = URI.create("http://localhost:8080/epics/" + id);
 
-        String newEpic = gson.toJson(new Epic("Epic UPDATED", "Some description UPDATED"));
+        String newEpic = gson.toJson(new Epic("Tasks.Epic UPDATED", "Some description UPDATED"));
 
         String newEpicWithId = "{\"idEpic\":" + id + "," + newEpic.substring(1);
 
@@ -403,13 +411,13 @@ public class HttpTaskServerTest extends FormatAdapters {
 
         assertEquals(201, response.statusCode());
         assertEquals(1, manager.getAllEpicTasks().size());
-        assertEquals(new Epic("Epic UPDATED", "Some description UPDATED"),
+        assertEquals(new Epic("Tasks.Epic UPDATED", "Some description UPDATED"),
                 manager.getEpicById(id));
     }
 
     @Test
     void deleteEpic() throws IOException, InterruptedException {
-        int id = manager.addEpicTask(new Epic("Epic 1", "Some description 1")) - 1;
+        int id = manager.addEpicTask(new Epic("Tasks.Epic 1", "Some description 1")) - 1;
 
         URI url = URI.create("http://localhost:8080/epics/" + id);
 
@@ -430,7 +438,7 @@ public class HttpTaskServerTest extends FormatAdapters {
 
     @Test
     void shouldReturn404DeleteEpic() throws IOException, InterruptedException {
-        manager.addEpicTask(new Epic("Epic 1", "Some description 1"));
+        manager.addEpicTask(new Epic("Tasks.Epic 1", "Some description 1"));
 
         URI url = URI.create("http://localhost:8080/epics/7001");
 
@@ -451,14 +459,14 @@ public class HttpTaskServerTest extends FormatAdapters {
 
     @Test
     void getAllSubtasksOfEpic() {
-        int id = manager.addEpicTask(new Epic("Epic 1", "Some description 1")) - 1;
+        int id = manager.addEpicTask(new Epic("Tasks.Epic 1", "Some description 1")) - 1;
 
-        manager.addSubTask(new Epic("Epic 1", "Some description 1"),
-                new SubTask("SubTask 1 of epic 1", "Description", TaskStatus.NEW,
+        manager.addSubTask(new Epic("Tasks.Epic 1", "Some description 1"),
+                new SubTask("Tasks.SubTask 1 of epic 1", "Description", TaskStatus.NEW,
                         Duration.ofMinutes(12), LocalDateTime.of(2024, 1, 1, 13, 0))
         );
-        manager.addSubTask(new Epic("Epic 1", "Some description 1"),
-                new SubTask("SubTask 2 of epic 1", "Description", TaskStatus.NEW,
+        manager.addSubTask(new Epic("Tasks.Epic 1", "Some description 1"),
+                new SubTask("Tasks.SubTask 2 of epic 1", "Description", TaskStatus.NEW,
                         Duration.ofMinutes(12), LocalDateTime.now())
         );
 
@@ -498,14 +506,14 @@ public class HttpTaskServerTest extends FormatAdapters {
 
     @Test
     void getAllSubTask() throws IOException, InterruptedException {
-        manager.addEpicTask(new Epic("Epic 1", "Some description 1"));
+        manager.addEpicTask(new Epic("Tasks.Epic 1", "Some description 1"));
 
-        manager.addSubTask(new Epic("Epic 1", "Some description 1"),
-                new SubTask("SubTask 1 of epic 1", "Description", TaskStatus.NEW,
+        manager.addSubTask(new Epic("Tasks.Epic 1", "Some description 1"),
+                new SubTask("Tasks.SubTask 1 of epic 1", "Description", TaskStatus.NEW,
                         Duration.ofMinutes(12), LocalDateTime.of(2024, 1, 1, 13, 0))
         );
-        manager.addSubTask(new Epic("Epic 1", "Some description 1"),
-                new SubTask("SubTask 2 of epic 1", "Description", TaskStatus.NEW,
+        manager.addSubTask(new Epic("Tasks.Epic 1", "Some description 1"),
+                new SubTask("Tasks.SubTask 2 of epic 1", "Description", TaskStatus.NEW,
                         Duration.ofMinutes(12), LocalDateTime.now())
         );
 
@@ -533,10 +541,10 @@ public class HttpTaskServerTest extends FormatAdapters {
 
     @Test
     void getSubTaskById() throws IOException, InterruptedException {
-        manager.addEpicTask(new Epic("Epic 1", "Some description 1"));
+        manager.addEpicTask(new Epic("Tasks.Epic 1", "Some description 1"));
 
-        int id = manager.addSubTask(new Epic("Epic 1", "Some description 1"),
-                new SubTask("SubTask 1 of epic 1", "Description", TaskStatus.NEW,
+        int id = manager.addSubTask(new Epic("Tasks.Epic 1", "Some description 1"),
+                new SubTask("Tasks.SubTask 1 of epic 1", "Description", TaskStatus.NEW,
                         Duration.ofMinutes(12), LocalDateTime.of(2024, 1, 1, 13, 0))
         ) - 1;
 
@@ -557,15 +565,15 @@ public class HttpTaskServerTest extends FormatAdapters {
 
         SubTask subTask = gson.fromJson(response.body(), SubTask.class);
 
-        assertEquals(new SubTask("SubTask 1 of epic 1", "Description", TaskStatus.NEW,
+        assertEquals(new SubTask("Tasks.SubTask 1 of epic 1", "Description", TaskStatus.NEW,
                 Duration.ofMinutes(12), LocalDateTime.of(2024, 1, 1, 13, 0)), subTask);
     }
 
     @Test
     void addSubTask() throws IOException, InterruptedException {
-        manager.addEpicTask(new Epic("Epic 1", "Some description 1"));
+        manager.addEpicTask(new Epic("Tasks.Epic 1", "Some description 1"));
 
-        String newSubTask = "{\"epicName\":\"Epic 1\",\"epicDescription\":\"Some description 1\"," + gson.toJson(new SubTask("SubTask 1 of epic 1", "Description", TaskStatus.NEW,
+        String newSubTask = "{\"epicName\":\"Tasks.Epic 1\",\"epicDescription\":\"Some description 1\"," + gson.toJson(new SubTask("Tasks.SubTask 1 of epic 1", "Description", TaskStatus.NEW,
                 Duration.ofMinutes(12), LocalDateTime.of(2024, 1, 1, 13, 0))).substring(1);
 
         URI url = URI.create("http://localhost:8080/subtasks");
@@ -588,14 +596,14 @@ public class HttpTaskServerTest extends FormatAdapters {
 
     @Test
     void updateSubTask() throws IOException, InterruptedException {
-        manager.addEpicTask(new Epic("Epic 1", "Some description 1"));
+        manager.addEpicTask(new Epic("Tasks.Epic 1", "Some description 1"));
 
-        int id = manager.addSubTask(new Epic("Epic 1", "Some description 1"),
-                new SubTask("SubTask 1 of epic 1", "Description", TaskStatus.NEW,
+        int id = manager.addSubTask(new Epic("Tasks.Epic 1", "Some description 1"),
+                new SubTask("Tasks.SubTask 1 of epic 1", "Description", TaskStatus.NEW,
                         Duration.ofMinutes(12), LocalDateTime.of(2024, 1, 1, 13, 0))
         ) - 1;
 
-        String newSubTask = "{\"idSubTask\":" + id + "," + gson.toJson(new SubTask("SubTask 1 of epic 1 UPDATED", "Description UPDATED", TaskStatus.DONE,
+        String newSubTask = "{\"idSubTask\":" + id + "," + gson.toJson(new SubTask("Tasks.SubTask 1 of epic 1 UPDATED", "Description UPDATED", TaskStatus.DONE,
                 Duration.ofMinutes(12), LocalDateTime.of(2023, 12, 31, 13, 0))).substring(1);
 
         URI url = URI.create("http://localhost:8080/subtasks");
@@ -613,7 +621,7 @@ public class HttpTaskServerTest extends FormatAdapters {
 
         assertEquals(201, response.statusCode());
 
-        assertEquals(new SubTask("SubTask 1 of epic 1 UPDATED", "Description UPDATED",
+        assertEquals(new SubTask("Tasks.SubTask 1 of epic 1 UPDATED", "Description UPDATED",
                         TaskStatus.DONE, Duration.ofMinutes(12),
                         LocalDateTime.of(2023, 12, 31, 13, 0)),
                         manager.getSubTaskById(id));
@@ -621,10 +629,10 @@ public class HttpTaskServerTest extends FormatAdapters {
 
     @Test
     void deleteSubTaskById() throws IOException, InterruptedException {
-        manager.addEpicTask(new Epic("Epic 1", "Some description 1"));
+        manager.addEpicTask(new Epic("Tasks.Epic 1", "Some description 1"));
 
-        int id = manager.addSubTask(new Epic("Epic 1", "Some description 1"),
-                new SubTask("SubTask 1 of epic 1", "Description", TaskStatus.NEW,
+        int id = manager.addSubTask(new Epic("Tasks.Epic 1", "Some description 1"),
+                new SubTask("Tasks.SubTask 1 of epic 1", "Description", TaskStatus.NEW,
                         Duration.ofMinutes(12), LocalDateTime.of(2024, 1, 1, 13, 0))
         ) - 1;
 
@@ -648,8 +656,8 @@ public class HttpTaskServerTest extends FormatAdapters {
 
     @Test
     void getHistory() throws IOException, InterruptedException {
-        int id1 = manager.addTask(new Task("Task 1", "Description", TaskStatus.IN_PROGRESS, Duration.ofMinutes(20), LocalDateTime.now()));
-        int id2 = manager.addTask(new Task("Task 2", "Description", TaskStatus.DONE,
+        int id1 = manager.addTask(new Task("Tasks.Task 1", "Description", TaskStatus.IN_PROGRESS, Duration.ofMinutes(20), LocalDateTime.now()));
+        int id2 = manager.addTask(new Task("Tasks.Task 2", "Description", TaskStatus.DONE,
                 Duration.ofMinutes(35), LocalDateTime.of(2024, 6, 14, 15, 0)));
 
         manager.getTaskById(id2);
@@ -677,8 +685,8 @@ public class HttpTaskServerTest extends FormatAdapters {
 
     @Test
     void getPrioritized() throws IOException, InterruptedException {
-        manager.addTask(new Task("Task 1", "Description", TaskStatus.IN_PROGRESS, Duration.ofMinutes(20), LocalDateTime.now()));
-        manager.addTask(new Task("Task 2", "Description", TaskStatus.DONE,
+        manager.addTask(new Task("Tasks.Task 1", "Description", TaskStatus.IN_PROGRESS, Duration.ofMinutes(20), LocalDateTime.now()));
+        manager.addTask(new Task("Tasks.Task 2", "Description", TaskStatus.DONE,
                 Duration.ofMinutes(35), LocalDateTime.of(2024, 6, 14, 15, 0)));
 
         URI url = URI.create("http://localhost:8080/prioritized");
