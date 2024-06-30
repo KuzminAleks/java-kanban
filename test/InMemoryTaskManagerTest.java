@@ -1,10 +1,10 @@
-import Managers.HistoryManager;
-import Managers.InMemoryTaskManager;
-import Managers.Managers;
-import Tasks.Epic;
-import Tasks.SubTask;
-import Tasks.Task;
-import Enums.TaskStatus;
+import managers.interfaces.HistoryManager;
+import managers.inmemory.InMemoryTaskManager;
+import managers.inmemory.Managers;
+import tasks.epic.Epic;
+import tasks.subtask.SubTask;
+import tasks.task.Task;
+import task.enums.TaskStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.time.Duration;

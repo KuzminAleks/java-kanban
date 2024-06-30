@@ -1,10 +1,10 @@
-import SaveExceptions.ManagerSaveException;
-import Managers.FileBackedTaskManager;
-import Managers.TaskManager;
-import Tasks.Epic;
-import Tasks.SubTask;
-import Tasks.Task;
-import Enums.TaskStatus;
+import save.exception.ManagerSaveException;
+import managers.file.backed.FileBackedTaskManager;
+import managers.interfaces.TaskManager;
+import tasks.epic.Epic;
+import tasks.subtask.SubTask;
+import tasks.task.Task;
+import task.enums.TaskStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
